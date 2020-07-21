@@ -28,7 +28,7 @@
 ---
 
 <div align="center">
-  <sub>Built with ❤︎ by <a href="http://soufan.com.br">query string experts at SouFan</a>
+  <sub>Built with ❤︎ by query string experts at<a href="http://soufan.com.br"> SouFan</a>
 </div>
 
 [typescript-image]: https://img.shields.io/badge/Typescript-294E80.svg?style=for-the-badge&logo=typescript
