@@ -1,11 +1,11 @@
 import { ParsedKeyValue } from '../core';
 
-export interface MultiMatchCallback {
-  (matches: ParsedKeyValue[], context: unknown): void;
+export interface MultiMatchCallback<T = unknown> {
+  (matches: ParsedKeyValue[], context: T): void;
 }
 
-export interface SingleMatchCallback {
-  (match: ParsedKeyValue, context: unknown): void;
+export interface SingleMatchCallback<T = unknown> {
+  (match: ParsedKeyValue, context: T): void;
 }
 
 export interface SearchCriteria {
@@ -33,36 +33,36 @@ function findAll(
   });
 }
 
-export interface Dispatcher {
-  handle(parsed: ParsedKeyValue[], context: unknown): void;
+export interface Dispatcher<T = unknown> {
+  handle(parsed: ParsedKeyValue[], context: T): void;
 }
 
-export class EachDispatcher implements Dispatcher {
-  private readonly callback: SingleMatchCallback;
+export class EachDispatcher<T = unknown> implements Dispatcher<T> {
+  private readonly callback: SingleMatchCallback<T>;
   private readonly searches: SearchArray;
 
-  constructor(callback: SingleMatchCallback, search: SearchCriteria) {
+  constructor(callback: SingleMatchCallback<T>, search: SearchCriteria) {
     this.callback = callback;
     this.searches = Object.entries(search);
   }
 
-  public handle(parsed: ParsedKeyValue[], context: unknown): void {
+  public handle(parsed: ParsedKeyValue[], context: T): void {
     const matches = findAll(this.searches, parsed);
 
     matches.forEach((match) => this.callback(match, context));
   }
 }
 
-export class EveryDispatcher implements Dispatcher {
-  private readonly callback: MultiMatchCallback;
+export class EveryDispatcher<T = unknown> implements Dispatcher<T> {
+  private readonly callback: MultiMatchCallback<T>;
   private readonly searches: SearchArray;
 
-  constructor(callback: MultiMatchCallback, search: SearchCriteria) {
+  constructor(callback: MultiMatchCallback<T>, search: SearchCriteria) {
     this.callback = callback;
     this.searches = Object.entries(search);
   }
 
-  public handle(parsed: ParsedKeyValue[], context: unknown): void {
+  public handle(parsed: ParsedKeyValue[], context: T): void {
     const matches = findAll(this.searches, parsed);
 
     if (matches.length) {
@@ -71,16 +71,16 @@ export class EveryDispatcher implements Dispatcher {
   }
 }
 
-export class LastDispatcher implements Dispatcher {
-  private readonly callback: SingleMatchCallback;
+export class LastDispatcher<T = unknown> implements Dispatcher<T> {
+  private readonly callback: SingleMatchCallback<T>;
   private readonly searches: SearchArray;
 
-  constructor(callback: SingleMatchCallback, search: SearchCriteria) {
+  constructor(callback: SingleMatchCallback<T>, search: SearchCriteria) {
     this.callback = callback;
     this.searches = Object.entries(search);
   }
 
-  public handle(parsed: ParsedKeyValue[], context: unknown): void {
+  public handle(parsed: ParsedKeyValue[], context: T): void {
     const matches = findAll(this.searches, parsed);
     const match = matches[matches.length - 1];
 
@@ -90,16 +90,16 @@ export class LastDispatcher implements Dispatcher {
   }
 }
 
-export class FirstDispatcher implements Dispatcher {
-  private readonly callback: SingleMatchCallback;
+export class FirstDispatcher<T = unknown> implements Dispatcher<T> {
+  private readonly callback: SingleMatchCallback<T>;
   private readonly searches: SearchArray;
 
-  constructor(callback: SingleMatchCallback, search: SearchCriteria) {
+  constructor(callback: SingleMatchCallback<T>, search: SearchCriteria) {
     this.callback = callback;
     this.searches = Object.entries(search);
   }
 
-  public handle(parsed: ParsedKeyValue[], context: unknown): void {
+  public handle(parsed: ParsedKeyValue[], context: T): void {
     const match = findOne(this.searches, parsed);
 
     if (match) {
@@ -108,14 +108,14 @@ export class FirstDispatcher implements Dispatcher {
   }
 }
 
-export class AllDispatcher implements Dispatcher {
-  private readonly callback: MultiMatchCallback;
+export class AllDispatcher<T = unknown> implements Dispatcher<T> {
+  private readonly callback: MultiMatchCallback<T>;
 
-  constructor(callback: MultiMatchCallback) {
+  constructor(callback: MultiMatchCallback<T>) {
     this.callback = callback;
   }
 
-  public handle(parsed: ParsedKeyValue[], context: unknown): void {
+  public handle(parsed: ParsedKeyValue[], context: T): void {
     if (parsed.length) {
       this.callback(parsed, context);
     }
