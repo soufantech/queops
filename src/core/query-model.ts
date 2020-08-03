@@ -1,15 +1,16 @@
 import querystring, { ParsedUrlQuery } from 'querystring';
 import { ValueParser, identityParser } from './value-parser';
 
-export interface ValueSchema {
-  readonly opcode: string | null;
+export type ValueSchemaObjParam = {
+  readonly opcode: string[] | string | null;
   readonly parser: ValueParser;
-}
+};
 
 export type ValueSchemaParam =
-  | Partial<ValueSchema>
-  | ValueSchema['opcode']
-  | ValueSchema['parser'];
+  | ValueSchemaObjParam
+  | string
+  | null
+  | ValueParser;
 
 export interface QuerySchemaParam {
   readonly [key: string]: ValueSchemaParam | ValueSchemaParam[];
@@ -21,6 +22,11 @@ export interface ParsedKeyValue {
   originalValue: string;
   value: unknown;
 }
+
+type ValueSchema = {
+  readonly opcode: string[] | null;
+  readonly parser: ValueParser;
+};
 
 type Key = string;
 type QuerySchema = Record<Key, ValueSchema[]>;
@@ -41,7 +47,7 @@ function parseOperation(value: string): Operation {
 
 function normalizeValueSchema(arg: ValueSchemaParam): ValueSchema {
   if (typeof arg === 'string') {
-    return { opcode: arg, parser: identityParser };
+    return { opcode: [arg], parser: identityParser };
   }
 
   if (typeof arg === 'function') {
@@ -53,7 +59,7 @@ function normalizeValueSchema(arg: ValueSchemaParam): ValueSchema {
   }
 
   return {
-    opcode: arg.opcode ?? null,
+    opcode: arg.opcode != null ? ([] as string[]).concat(arg.opcode) : null,
     parser: arg.parser ?? identityParser,
   };
 }
@@ -102,7 +108,10 @@ export class QueryModel {
         const { opcode, arg: opArg } = parseOperation(value);
 
         valueSchemas.forEach((valueSchema) => {
-          if (valueSchema.opcode !== null && valueSchema.opcode !== opcode) {
+          if (
+            valueSchema.opcode !== null &&
+            !valueSchema.opcode.includes(opcode)
+          ) {
             return;
           }
 
@@ -116,7 +125,7 @@ export class QueryModel {
 
           parsed.push({
             key: key,
-            opcode: valueSchema.opcode,
+            opcode: valueSchema.opcode !== null ? opcode : null,
             originalValue: value,
             value: parsedValue,
           });
