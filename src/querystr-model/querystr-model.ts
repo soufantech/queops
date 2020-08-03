@@ -1,5 +1,6 @@
 import querystring, { ParsedUrlQuery } from 'querystring';
 import { ValueParser, identityParser } from './value-parser';
+import { ParsedKeyValue } from './parsed-key-value';
 
 export type ValueSchemaObjParam = {
   readonly opcode: string[] | string | null;
@@ -14,13 +15,6 @@ export type ValueSchemaParam =
 
 export interface QuerySchemaParam {
   readonly [key: string]: ValueSchemaParam | ValueSchemaParam[];
-}
-
-export interface ParsedKeyValue {
-  opcode: string | null;
-  key: string;
-  originalValue: string;
-  value: unknown;
 }
 
 type ValueSchema = {

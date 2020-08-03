@@ -1,5 +1,5 @@
-import { ParsedKeyValue } from '../querystr-model';
-import { Finder } from './finder';
+import { ParsedKeyValue } from './parsed-key-value';
+import { Finder } from '../query-builder';
 
 type SearchArray = Array<keyof SearchCriteria>[];
 
