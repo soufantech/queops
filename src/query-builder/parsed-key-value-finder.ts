@@ -1,4 +1,4 @@
-import { ParsedKeyValue } from '../core';
+import { ParsedKeyValue } from '../querystr-model';
 import { Finder } from './finder';
 
 type SearchArray = Array<keyof SearchCriteria>[];

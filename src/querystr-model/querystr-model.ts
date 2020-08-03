@@ -64,7 +64,7 @@ function normalizeValueSchema(arg: ValueSchemaParam): ValueSchema {
   };
 }
 
-export class QueryModel {
+export class QuerystrModel {
   private readonly schema: QuerySchema;
 
   constructor(schema: QuerySchemaParam) {
