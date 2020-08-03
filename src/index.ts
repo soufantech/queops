@@ -1,2 +1,2 @@
 export * from './core';
-export * from './builder';
+export * from './query-builder';
