@@ -106,3 +106,25 @@ export class AllDispatcher<TData, TContext = unknown>
     }
   }
 }
+
+export class NoneDispatcher<TData, TContext = unknown>
+  implements Dispatcher<TData, TContext> {
+  private readonly callback: MultiMatchCallback<TData, TContext>;
+  private readonly finder: Finder<TData>;
+
+  constructor(
+    finder: Finder<TData>,
+    callback: MultiMatchCallback<TData, TContext>,
+  ) {
+    this.callback = callback;
+    this.finder = finder;
+  }
+
+  public handle(dataset: TData[], context: TContext): void {
+    const match = this.finder.findOne(dataset);
+
+    if (match === undefined) {
+      this.callback(dataset, context);
+    }
+  }
+}
