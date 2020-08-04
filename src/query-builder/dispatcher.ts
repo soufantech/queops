@@ -92,7 +92,7 @@ export class FirstDispatcher<TData, TContext = unknown>
   }
 }
 
-export class AllDispatcher<TData, TContext = unknown>
+export class AnyDispatcher<TData, TContext = unknown>
   implements Dispatcher<TData, TContext> {
   private readonly callback: MultiMatchCallback<TData, TContext>;
 
