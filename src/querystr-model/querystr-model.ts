@@ -1,5 +1,4 @@
 import querystring, { ParsedUrlQuery } from 'querystring';
-import { ParsedKeyValue } from './parsed-key-value';
 
 export interface ValueParseResult<TValue = unknown> {
   opcode?: string | null;
@@ -13,6 +12,13 @@ export interface ValueParser<TValueReturn = unknown> {
 export interface QuerySchema {
   readonly [key: string]: ValueParser | ValueParser[];
 }
+
+export type ParsedKeyValue = {
+  opcode: string | null;
+  key: string;
+  originalValue: string;
+  value: unknown;
+};
 
 type NormalizedQuerySchema = {
   [key: string]: ValueParser[];

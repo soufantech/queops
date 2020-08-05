@@ -2,7 +2,7 @@ import {
   QuerystrModel,
   QueryBuilder,
   ParsedKeyValue,
-  ParsedKeyValueFinder,
+  ObjectFinder,
   EachDispatcher,
   stringParser,
   numberParser,
@@ -79,18 +79,15 @@ test('QueryBuilder works as expected.', () => {
   const fieldsDispatcher = new EachDispatcher<
     ParsedKeyValue,
     SequelizeCriteria
-  >(
-    new ParsedKeyValueFinder({ key: fields, opcode: null }),
-    ({ key, value }, ctx) => {
-      ctx.where[key] = value;
-    },
-  );
+  >(new ObjectFinder({ key: fields, opcode: null }), ({ key, value }, ctx) => {
+    ctx.where[key] = value;
+  });
 
   const opcodeDispatcher = new EachDispatcher<
     ParsedKeyValue,
     SequelizeCriteria
   >(
-    new ParsedKeyValueFinder({ opcode: FULLCOMPARE_OPCODES }),
+    new ObjectFinder({ opcode: FULLCOMPARE_OPCODES }),
     ({ opcode, key, value }, ctx) => {
       ctx.where[key] = ctx.where[key] ?? {};
       (ctx.where[key] as Record<string, unknown>)[opcode as OpKey] = value;
@@ -98,7 +95,7 @@ test('QueryBuilder works as expected.', () => {
   );
 
   const orderDispatcher = new EachDispatcher<ParsedKeyValue, SequelizeCriteria>(
-    new ParsedKeyValueFinder({ key: 'order', opcode: ORDERABLE_OPCODES }),
+    new ObjectFinder({ key: 'order', opcode: ORDERABLE_OPCODES }),
     ({ value, opcode }, ctx) => {
       if (!Array.isArray(ctx.order)) ctx.order = [];
 
@@ -109,12 +106,9 @@ test('QueryBuilder works as expected.', () => {
   const paginationDispatcher = new EachDispatcher<
     ParsedKeyValue,
     SequelizeCriteria
-  >(
-    new ParsedKeyValueFinder({ key: ['offset', 'limit'] }),
-    ({ value, key }, ctx) => {
-      ctx[key as 'offset' | 'limit'] = value as number;
-    },
-  );
+  >(new ObjectFinder({ key: ['offset', 'limit'] }), ({ value, key }, ctx) => {
+    ctx[key as 'offset' | 'limit'] = value as number;
+  });
 
   const parsedQuery = queryModel.parse(QUERY);
 
