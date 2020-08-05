@@ -1,86 +1,67 @@
 import querystring, { ParsedUrlQuery } from 'querystring';
-import { ValueParser, identityParser } from './value-parser';
 import { ParsedKeyValue } from './parsed-key-value';
 
-export type ValueSchemaObjParam = {
-  readonly opcode: string[] | string | null;
-  readonly parser: ValueParser;
-};
-
-export type ValueSchemaParam =
-  | ValueSchemaObjParam
-  | string
-  | null
-  | ValueParser;
-
-export interface QuerySchemaParam {
-  readonly [key: string]: ValueSchemaParam | ValueSchemaParam[];
+export interface ValueParseResult<TValue = unknown> {
+  opcode?: string | null;
+  value?: TValue;
 }
 
-type ValueSchema = {
-  readonly opcode: string[] | null;
-  readonly parser: ValueParser;
-};
-
-type Key = string;
-type QuerySchema = Record<Key, ValueSchema[]>;
-
-type Operation = {
-  opcode: string;
-  arg: string;
-};
-
-function parseOperation(value: string): Operation {
-  const index = value.indexOf(':');
-
-  return {
-    opcode: value.substring(0, index),
-    arg: value.substring(index + 1),
-  };
+export interface ValueParser<TValueReturn = unknown> {
+  (value: string): ValueParseResult<TValueReturn>;
 }
 
-function normalizeValueSchema(arg: ValueSchemaParam): ValueSchema {
-  if (typeof arg === 'string') {
-    return { opcode: [arg], parser: identityParser };
-  }
-
-  if (typeof arg === 'function') {
-    return { opcode: null, parser: arg };
-  }
-
-  if (arg === null) {
-    return { opcode: null, parser: identityParser };
-  }
-
-  return {
-    opcode: arg.opcode != null ? ([] as string[]).concat(arg.opcode) : null,
-    parser: arg.parser ?? identityParser,
-  };
+export interface QuerySchema {
+  readonly [key: string]: ValueParser | ValueParser[];
 }
+
+type NormalizedQuerySchema = {
+  [key: string]: ValueParser[];
+};
 
 export class QuerystrModel {
-  private readonly schema: QuerySchema;
+  private readonly schema: NormalizedQuerySchema;
 
-  constructor(schema: QuerySchemaParam) {
-    this.schema = this.buildSchema(schema);
+  constructor(schema: QuerySchema) {
+    this.schema = this.normalizeSchema(schema);
   }
 
-  private buildSchema(schema: QuerySchemaParam): QuerySchema {
-    return Object.entries(schema).reduce((schema, [key, valueSchemaArgs]) => {
-      valueSchemaArgs = ([] as ValueSchemaParam[]).concat(valueSchemaArgs);
-
-      schema[key] = valueSchemaArgs.map((valueSchemaArg, pos) => {
-        if (valueSchemaArg === undefined) {
-          throw new TypeError(
-            `Invalid argument: invalid value schema definition in position ${pos} for key \`${key}\``,
-          );
-        }
-
-        return normalizeValueSchema(valueSchemaArg);
-      });
+  private normalizeSchema(schema: QuerySchema): NormalizedQuerySchema {
+    return Object.entries(schema).reduce((schema, [key, parser]) => {
+      schema[key] = ([] as ValueParser[]).concat(
+        parser as ValueParser | ValueParser[],
+      );
 
       return schema;
-    }, {} as QuerySchema);
+    }, {} as NormalizedQuerySchema);
+  }
+
+  private parseKey(key: string, values: string | string[]): ParsedKeyValue[] {
+    const parsers = this.schema[key];
+
+    if (!parsers) {
+      return [];
+    }
+
+    const normalizedValues: string[] = ([] as string[]).concat(
+      values as string | string[],
+    );
+
+    return normalizedValues.reduce((parsedKeyValues, value) => {
+      parsers.forEach((parser) => {
+        const parsedValue = parser(value);
+
+        if (parsedValue?.value !== undefined) {
+          parsedKeyValues.push({
+            key,
+            originalValue: value,
+            opcode: parsedValue.opcode ?? null,
+            value: parsedValue.value,
+          });
+        }
+      });
+
+      return parsedKeyValues;
+    }, [] as ParsedKeyValue[]);
   }
 
   parse(queryString: string | ParsedUrlQuery): ParsedKeyValue[] {
@@ -89,44 +70,10 @@ export class QuerystrModel {
         ? querystring.decode(queryString)
         : queryString;
 
-    return Object.entries(query).reduce((parsed, [key, value]) => {
-      const valueSchemas = this.schema[key];
-
-      if (!valueSchemas) {
-        return parsed;
-      }
-
-      const values = ([] as string[]).concat(value as string | string[]);
-
-      values.forEach((value) => {
-        const { opcode, arg: opArg } = parseOperation(value);
-
-        valueSchemas.forEach((valueSchema) => {
-          if (
-            valueSchema.opcode !== null &&
-            !valueSchema.opcode.includes(opcode)
-          ) {
-            return;
-          }
-
-          const parsedValue = valueSchema.parser(
-            valueSchema.opcode === null ? value : opArg,
-          );
-
-          if (parsedValue === undefined) {
-            return;
-          }
-
-          parsed.push({
-            key: key,
-            opcode: valueSchema.opcode !== null ? opcode : null,
-            originalValue: value,
-            value: parsedValue,
-          });
-        });
-      });
-
-      return parsed;
+    return Object.entries(query).reduce((parsedKeyValues, [key, value]) => {
+      return parsedKeyValues.concat(
+        this.parseKey(key, value as string | string[]),
+      );
     }, [] as ParsedKeyValue[]);
   }
 }
