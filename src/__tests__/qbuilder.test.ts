@@ -5,12 +5,12 @@ import {
   ObjectFinder,
   EachDispatcher,
   stringParser,
-  numberParser,
+  floatParser,
   unescapedListParser,
   operatorParser,
 } from '../index';
 import { inspect } from 'util';
-import { dateParser } from '../querystr-model';
+import { dateParser, integerParser } from '../querystr-model';
 
 const Op = {
   in: 'Op.in',
@@ -46,14 +46,14 @@ const FULLCOMPARE_OPCODES = COMPARABLE_OPCODES.concat(SET_OPCODES);
 const ORDERABLE_OPCODES = ['asc', 'desc'];
 
 const pagination = {
-  offset: numberParser(),
-  limit: numberParser(),
+  offset: floatParser(),
+  limit: floatParser(),
 };
 
 const queryModel = new QuerystrModel({
   city: stringParser(),
   published_at: operatorParser(COMPARABLE_OPCODES, dateParser()),
-  stars: operatorParser(COMPARABLE_OPCODES, numberParser()),
+  stars: operatorParser(COMPARABLE_OPCODES, integerParser()),
   category: operatorParser('in', unescapedListParser(stringParser())),
   order: operatorParser(ORDERABLE_OPCODES, stringParser()),
   tags: operatorParser(SET_OPCODES, unescapedListParser(stringParser())),
