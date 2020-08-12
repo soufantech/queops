@@ -41,7 +41,7 @@ describe('stringParser', () => {
 
     const parsed = parseString(INPUT);
 
-    expect(parsed.value).toBeUndefined;
+    expect(parsed.value).toBeUndefined();
     expect(parsed.opcode).toBeUndefined();
   });
 });
