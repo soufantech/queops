@@ -1,7 +1,6 @@
 import {
   ScalarParser,
   ParsedKeyValue,
-  EnumParserOptions,
   OperatorValueParser,
   enumParser,
   operatorParser,
@@ -20,16 +19,12 @@ const ORDER_VALUES = ['asc', 'desc'] as const;
 
 type OrderValue = typeof ORDER_VALUES[number];
 
-const ORDER_VALUES_MAPPING = {
-  asc: 'ASC',
-  desc: 'DESC',
-};
-
 export type OrderableFieldOptions = {
   validator?: Validator;
-  parserOptions?: EnumParserOptions;
   allowOnly?: OrderValue;
 };
+
+const capitalize = (value: string) => value.toUpperCase();
 
 export class OrderableField implements FieldType<string> {
   private readonly parser: OperatorValueParser<string>;
@@ -37,15 +32,13 @@ export class OrderableField implements FieldType<string> {
 
   constructor({
     validator = dummyValidator,
-    parserOptions,
     allowOnly,
   }: OrderableFieldOptions = {}) {
     this.parser = operatorParser(
       OPCODE,
-      enumParser(
-        ([] as OrderValue[]).concat(allowOnly ?? ORDER_VALUES),
-        parserOptions,
-      ),
+      enumParser(([] as OrderValue[]).concat(allowOnly ?? ORDER_VALUES), {
+        transform: capitalize,
+      }),
     );
     this.validator = validator;
   }
@@ -75,10 +68,7 @@ export class OrderableField implements FieldType<string> {
           query.order = [];
         }
 
-        (query.order as OrderItem[]).push([
-          keyAlias,
-          ORDER_VALUES_MAPPING[validValue],
-        ]);
+        (query.order as OrderItem[]).push([keyAlias, validValue]);
       },
     );
   }
