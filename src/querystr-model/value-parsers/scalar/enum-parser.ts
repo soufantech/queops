@@ -6,7 +6,7 @@ export type EnumParserOptions = {
 
 export function enumParser(
   this: void,
-  values: string[],
+  values: readonly string[],
   options: EnumParserOptions = {},
 ): ScalarParser<string> {
   const { transform = (e) => e } = options;

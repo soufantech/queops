@@ -2,10 +2,14 @@ import { ScalarParser, CompositeParser } from './composite-parser';
 
 const RANGE_TUPLE_SIZE = 2;
 
+export type UnescapedRangeParserOptions = {
+  separator?: string;
+};
+
 export function unescapedRangeParser<T>(
   this: void,
   scalarParser: ScalarParser<T>,
-  { separator = '..' } = {},
+  { separator = '..' }: UnescapedRangeParserOptions = {},
 ): CompositeParser<T[]> {
   return (value: string) => {
     const values = value

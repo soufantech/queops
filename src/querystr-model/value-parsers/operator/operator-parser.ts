@@ -1,7 +1,9 @@
 import { ValueParser, OperatorValueParser } from './operator-value-parser';
 import { baseOperatorParser, OpcodeMatcher } from './base-operator-parser';
 
-function createOpcodeMatcher(opcodes: string | string[]): OpcodeMatcher {
+function createOpcodeMatcher(
+  opcodes: string | readonly string[],
+): OpcodeMatcher {
   const opcodesToMatch = ([] as string[]).concat(opcodes);
 
   return (opcode: string): boolean => {
@@ -11,7 +13,7 @@ function createOpcodeMatcher(opcodes: string | string[]): OpcodeMatcher {
 
 export function operatorParser<T>(
   this: void,
-  opcodes: string | string[],
+  opcodes: string | readonly string[],
   valueParser: ValueParser<T>,
 ): OperatorValueParser<T> {
   const matcher = createOpcodeMatcher(opcodes);
