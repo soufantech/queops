@@ -1,20 +1,13 @@
 import { dateParser } from '../value-parser';
-
 import {
-  RangeUriParamHandlerParams,
+  RangeUriParamHandlerOptions,
   RangeUriParamHandler,
 } from './range-uri-param-handler';
 
-export type RangeDateUriParamHandlerParams = Omit<
-  RangeUriParamHandlerParams<Date>,
-  'operandParser'
->;
+export type RangeDateUriParamHandlerOptions = RangeUriParamHandlerOptions;
 
 export class RangeDateUriParamHandler extends RangeUriParamHandler<Date> {
-  constructor(params: RangeDateUriParamHandlerParams) {
-    super({
-      ...params,
-      operandParser: dateParser(),
-    });
+  constructor(field: string, options?: RangeDateUriParamHandlerOptions) {
+    super(field, dateParser(), options);
   }
 }

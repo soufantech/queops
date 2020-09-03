@@ -5,15 +5,11 @@ import {
 } from './query-filter';
 import { QueryFilterMiddleware } from './query-filter-middleware';
 
-export type MiddlewaredQueryFilterParams<TOperand = unknown> = {
-  middlewares?: QueryFilterMiddleware<TOperand>[];
-};
-
 export abstract class MiddlewaredQueryFilter<TOperand = unknown>
   implements QueryFilter<TOperand> {
   private readonly middlewares: QueryFilterMiddleware<TOperand>[];
 
-  constructor({ middlewares }: MiddlewaredQueryFilterParams<TOperand>) {
+  constructor(middlewares?: QueryFilterMiddleware<TOperand>[]) {
     this.middlewares = middlewares ?? [];
   }
 

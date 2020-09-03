@@ -1,7 +1,4 @@
-import {
-  MiddlewaredQueryFilter,
-  MiddlewaredQueryFilterParams,
-} from './middlewared-query-filter';
+import { MiddlewaredQueryFilter } from './middlewared-query-filter';
 import {
   QueryFilterMiddleware,
   createOperatorAllowlistMiddleware,
@@ -18,17 +15,21 @@ const PRESET_MIDDLEWARES = [
   createOperatorAllowlistMiddleware(RANGE_CONDITION_QF_OPERATORS),
 ];
 
+export type RangeConditionQueryFilterOptions<TOperand = unknown> = {
+  middlewares?: QueryFilterMiddleware<TOperand>;
+};
+
 export class RangeConditionQueryFilter<
   TOperand = unknown
 > extends MiddlewaredQueryFilter<TOperand[]> {
   public constructor({
     middlewares,
-  }: MiddlewaredQueryFilterParams<TOperand[]> = {}) {
-    super({
-      middlewares: (PRESET_MIDDLEWARES as QueryFilterMiddleware<
-        TOperand[]
-      >[]).concat(middlewares ?? []),
-    });
+  }: RangeConditionQueryFilterOptions<TOperand[]> = {}) {
+    super(
+      (PRESET_MIDDLEWARES as QueryFilterMiddleware<TOperand[]>[]).concat(
+        middlewares ?? [],
+      ),
+    );
   }
 
   public getDispatcher({

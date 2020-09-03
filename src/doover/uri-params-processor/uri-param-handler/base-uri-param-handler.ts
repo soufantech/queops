@@ -8,12 +8,6 @@ import {
 } from '../../query-filter';
 import { ValueParser } from '../value-parser';
 
-export type BaseUriParamHandlerParams<TOperand = unknown> = {
-  filter: MiddlewaredQueryFilter<TOperand>;
-  parser: ValueParser<TOperand>;
-  field: string;
-};
-
 export type DefaultValue<TOperand = unknown> = Pick<
   QueryFilterInput<TOperand>,
   'operand' | 'operator'
@@ -26,7 +20,11 @@ export class BaseUriParamHandler<TOperand = unknown>
   private defaultValue?: DefaultValue<TOperand>;
   public readonly field: string;
 
-  constructor({ parser, filter, field }: BaseUriParamHandlerParams<TOperand>) {
+  constructor(
+    field: string,
+    parser: ValueParser<TOperand>,
+    filter: MiddlewaredQueryFilter<TOperand>,
+  ) {
     this.filter = filter;
     this.parser = parser;
     this.field = field;
