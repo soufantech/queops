@@ -4,6 +4,7 @@ import {
   MiddlewaredQueryFilter,
   Validator,
   createOperandValidationMiddleware,
+  QueryFilterInput,
 } from '../../query-filter';
 import { ValueParser } from '../value-parser';
 
@@ -13,10 +14,16 @@ export type BaseUrlQueryFilterHandlerParams<TOperand = unknown> = {
   field: string;
 };
 
+export type DefaultValue<TOperand = unknown> = Pick<
+  QueryFilterInput<TOperand>,
+  'operand' | 'operator'
+>;
+
 export class BaseUrlQueryFilterHandler<TOperand = unknown>
   implements UrlQueryFilterHandler {
   protected readonly filter: MiddlewaredQueryFilter<TOperand>;
   private readonly parser: ValueParser<TOperand>;
+  private defaultValue?: DefaultValue<TOperand>;
   public readonly field: string;
 
   constructor({
@@ -29,7 +36,7 @@ export class BaseUrlQueryFilterHandler<TOperand = unknown>
     this.field = field;
   }
 
-  handle(conditions: string[]): QueryBuilderDispatcher | undefined {
+  private _handle(conditions: string[]): QueryBuilderDispatcher | undefined {
     return conditions.reduce<QueryBuilderDispatcher | undefined>(
       (dispatcher, condition) => {
         if (dispatcher !== undefined) {
@@ -42,8 +49,6 @@ export class BaseUrlQueryFilterHandler<TOperand = unknown>
           return undefined;
         }
 
-        console.log('opcode', opcode);
-
         return this.filter.filter({
           field: this.field,
           operand: value,
@@ -54,7 +59,25 @@ export class BaseUrlQueryFilterHandler<TOperand = unknown>
     );
   }
 
-  validateWith(validator: Validator): this {
+  public handle(conditions: string[]): QueryBuilderDispatcher | undefined {
+    const dispatcher = this._handle(conditions);
+
+    if (dispatcher === undefined && this.defaultValue !== undefined) {
+      return this.filter.filter({
+        field: this.field,
+        operand: this.defaultValue.operand,
+        operator: this.defaultValue.operator,
+      });
+    }
+
+    return dispatcher;
+  }
+
+  protected setDefaultValue(defaultValue: DefaultValue<TOperand>): void {
+    this.defaultValue = defaultValue;
+  }
+
+  public validateWith(validator: Validator): this {
     this.filter.with(createOperandValidationMiddleware(validator));
 
     return this;

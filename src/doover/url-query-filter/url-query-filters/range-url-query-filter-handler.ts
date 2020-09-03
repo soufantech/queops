@@ -37,6 +37,18 @@ export class RangeUrlQueryFilterHandler<
     });
   }
 
+  public defaultTo(
+    operator: RangeComparisonOperator,
+    operand: TOperand[],
+  ): this {
+    this.setDefaultValue({
+      operand,
+      operator,
+    });
+
+    return this;
+  }
+
   public allowOperators(...allowedOperators: RangeComparisonOperator[]): this {
     this.filter.with(createOperatorAllowlistMiddleware(allowedOperators));
 

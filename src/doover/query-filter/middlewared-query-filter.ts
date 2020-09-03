@@ -34,10 +34,7 @@ export abstract class MiddlewaredQueryFilter<TOperand = unknown>
           return input;
         }
 
-        const m = middleware(input);
-
-        console.log(m);
-        return m;
+        return middleware(input);
       },
       filterInput,
     );

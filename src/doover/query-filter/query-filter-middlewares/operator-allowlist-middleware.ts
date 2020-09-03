@@ -7,11 +7,8 @@ export function createOperatorAllowlistMiddleware<
 >(operators: readonly TOperator[]): QueryFilterMiddleware<TOperand> {
   return (filterInput: QueryFilterInput<TOperand>) => {
     if (operators.includes(filterInput.operator as TOperator)) {
-      console.log('if >>>', operators, filterInput);
       return filterInput;
     }
-
-    console.log('nif >>>', operators, filterInput);
 
     return undefined;
   };
