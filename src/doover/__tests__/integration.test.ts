@@ -5,7 +5,8 @@ import { inspect } from 'util';
 
 const QUERYSTR = `\
 birthdate=bet:2010..2020-10&\
-ignore_me=please`;
+ignore_me=please&\
+tags=in:linux,foss,architecture&`;
 
 test('integration', () => {
   const qb = new QueryBuilder();
@@ -16,6 +17,7 @@ test('integration', () => {
       new Date(Date.now()),
       new Date(Date.now()),
     ]),
+    tags: Q.elementString('searchTags'),
   });
 
   const success = processor.process(QUERYSTR, qb);

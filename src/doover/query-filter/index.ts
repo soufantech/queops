@@ -4,3 +4,4 @@ export * from './middlewared-query-filter';
 export * from './query-filter-middleware';
 export * from './range-condition-query-filter';
 export * from './strict-condition-query-filter';
+export * from './element-comparison-query-filter';
