@@ -13,7 +13,7 @@ import { RangeComparisonOperator } from '../../query-builder-interface';
 import {
   createOperatorAllowlistMiddleware,
   createOperatorDenylistMiddleware,
-} from '../../query-filter/query-filter-middlewares';
+} from '../../query-filter';
 
 export type RangeUriParamHandlerParams<TOperand = unknown> = {
   operandParser: ScalarParser<TOperand>;

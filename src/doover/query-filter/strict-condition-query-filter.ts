@@ -1,7 +1,6 @@
-import { MiddlewaredQueryFilter } from '../middlewared-query-filter';
-import { QueryBuilderInterface } from '../../query-builder-interface';
-import { QueryBuilderDispatcher } from '../query-builder-dispatcher';
-import { QueryFilterInput } from '../query-filter-input';
+import { MiddlewaredQueryFilter } from './middlewared-query-filter';
+import { QueryBuilderInterface } from '../query-builder-interface';
+import { QueryFilterInput, QueryBuilderDispatcher } from '../query-filter';
 
 export class StrictConditionQueryFilter<
   TOperand = unknown

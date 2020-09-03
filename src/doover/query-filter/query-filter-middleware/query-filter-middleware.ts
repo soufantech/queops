@@ -1,4 +1,4 @@
-import { QueryFilterInput } from './query-filter-input';
+import { QueryFilterInput } from '../query-filter';
 
 export interface QueryFilterMiddleware<TOperand = unknown> {
   (filterInput: QueryFilterInput<TOperand>):

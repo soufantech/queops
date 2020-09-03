@@ -1,6 +1,8 @@
-import { QueryFilterInput } from './query-filter-input';
-import { QueryBuilderDispatcher } from './query-builder-dispatcher';
-import { QueryFilter } from './query-filter';
+import {
+  QueryFilter,
+  QueryFilterInput,
+  QueryBuilderDispatcher,
+} from './query-filter';
 import { QueryFilterMiddleware } from './query-filter-middleware';
 
 export type MiddlewaredQueryFilterParams<TOperand = unknown> = {

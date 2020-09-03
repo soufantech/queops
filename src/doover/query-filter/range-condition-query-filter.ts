@@ -1,15 +1,16 @@
 import {
   MiddlewaredQueryFilter,
   MiddlewaredQueryFilterParams,
-} from '../middlewared-query-filter';
-import { QueryFilterMiddleware } from '../query-filter-middleware';
-import { createOperatorAllowlistMiddleware } from '../query-filter-middlewares';
+} from './middlewared-query-filter';
+import {
+  QueryFilterMiddleware,
+  createOperatorAllowlistMiddleware,
+} from './query-filter-middleware';
 import {
   QueryBuilderInterface,
   RangeComparisonOperator,
-} from '../../query-builder-interface';
-import { QueryBuilderDispatcher } from '../query-builder-dispatcher';
-import { QueryFilterInput } from '../query-filter-input';
+} from '../query-builder-interface';
+import { QueryFilterInput, QueryBuilderDispatcher } from './query-filter';
 
 const RANGE_CONDITION_QF_OPERATORS: RangeComparisonOperator[] = ['bet', 'nbet'];
 

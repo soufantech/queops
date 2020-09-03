@@ -1,5 +1,5 @@
-import { QueryFilterInput } from '../query-filter-input';
-import { QueryFilterMiddleware } from '../query-filter-middleware';
+import { QueryFilterInput } from '../query-filter';
+import { QueryFilterMiddleware } from './query-filter-middleware';
 
 export function createOperatorAllowlistMiddleware<
   TOperator extends string,
