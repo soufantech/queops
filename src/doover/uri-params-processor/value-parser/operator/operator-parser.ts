@@ -1,5 +1,6 @@
-import { ValueParser, OperatorValueParser } from './operator-value-parser';
+import { OperatorValueParser } from './operator-value-parser';
 import { baseOperatorParser, OpcodeMatcher } from './base-operator-parser';
+import { ValueParser } from '../value-parser';
 
 function createOpcodeMatcher(
   opcodes: string | readonly string[],

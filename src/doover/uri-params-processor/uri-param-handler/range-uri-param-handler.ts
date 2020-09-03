@@ -4,30 +4,30 @@ import {
   unescapedRangeParser,
   UnescapedRangeParserOptions,
   straightOperatorParser,
-} from '../value-parsers';
+} from '../value-parser';
 import {
-  BaseUrlQueryFilterHandler,
-  BaseUrlQueryFilterHandlerParams,
-} from './base-url-query-filter-handler';
+  BaseUriParamHandler,
+  BaseUriParamHandlerParams,
+} from './base-uri-param-handler';
 import { RangeComparisonOperator } from '../../query-builder-interface';
 import {
   createOperatorAllowlistMiddleware,
   createOperatorDenylistMiddleware,
 } from '../../query-filter/query-filter-middlewares';
 
-export type RangeUrlQueryFilterHandlerParams<TOperand = unknown> = {
+export type RangeUriParamHandlerParams<TOperand = unknown> = {
   operandParser: ScalarParser<TOperand>;
-} & Pick<BaseUrlQueryFilterHandlerParams<TOperand[]>, 'field'> &
+} & Pick<BaseUriParamHandlerParams<TOperand[]>, 'field'> &
   Pick<UnescapedRangeParserOptions, 'separator'>;
 
-export class RangeUrlQueryFilterHandler<
+export class RangeUriParamHandler<
   TOperand = unknown
-> extends BaseUrlQueryFilterHandler<TOperand[]> {
+> extends BaseUriParamHandler<TOperand[]> {
   constructor({
     field,
     separator,
     operandParser,
-  }: RangeUrlQueryFilterHandlerParams<TOperand>) {
+  }: RangeUriParamHandlerParams<TOperand>) {
     super({
       field,
       parser: straightOperatorParser(

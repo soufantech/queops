@@ -1,4 +1,4 @@
-import { ValueParser } from '../../value-parser';
+import { ValueParser } from '../value-parser';
 
 export { ScalarParser } from '../scalar';
 

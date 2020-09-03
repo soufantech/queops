@@ -1,4 +1,4 @@
-import { UrlQueryFilterHandler } from '../url-query-filter-handler';
+import { UriParamHandler } from './uri-param-handler';
 import {
   QueryBuilderDispatcher,
   MiddlewaredQueryFilter,
@@ -8,7 +8,7 @@ import {
 } from '../../query-filter';
 import { ValueParser } from '../value-parser';
 
-export type BaseUrlQueryFilterHandlerParams<TOperand = unknown> = {
+export type BaseUriParamHandlerParams<TOperand = unknown> = {
   filter: MiddlewaredQueryFilter<TOperand>;
   parser: ValueParser<TOperand>;
   field: string;
@@ -19,18 +19,14 @@ export type DefaultValue<TOperand = unknown> = Pick<
   'operand' | 'operator'
 >;
 
-export class BaseUrlQueryFilterHandler<TOperand = unknown>
-  implements UrlQueryFilterHandler {
+export class BaseUriParamHandler<TOperand = unknown>
+  implements UriParamHandler {
   protected readonly filter: MiddlewaredQueryFilter<TOperand>;
   private readonly parser: ValueParser<TOperand>;
   private defaultValue?: DefaultValue<TOperand>;
   public readonly field: string;
 
-  constructor({
-    parser,
-    filter,
-    field,
-  }: BaseUrlQueryFilterHandlerParams<TOperand>) {
+  constructor({ parser, filter, field }: BaseUriParamHandlerParams<TOperand>) {
     this.filter = filter;
     this.parser = parser;
     this.field = field;

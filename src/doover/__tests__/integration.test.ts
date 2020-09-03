@@ -1,8 +1,8 @@
 import { QueryBuilder } from './query-builder';
 import {
-  UrlQueryFiltersProcessor,
-  RangeDateUrlQueryFilterHandler,
-} from '../url-query-filter';
+  UriParamsProcessor,
+  RangeDateUriParamHandler,
+} from '../uri-params-processor';
 import { inspect } from 'util';
 
 const QUERYSTR = 'birthdate=bet:2010..2020-10';
@@ -10,11 +10,11 @@ const QUERYSTR = 'birthdate=bet:2010..2020-10';
 test('integration', () => {
   const qb = new QueryBuilder();
 
-  const processor = new UrlQueryFiltersProcessor({
-    birthdate: new RangeDateUrlQueryFilterHandler({
+  const processor = new UriParamsProcessor({
+    birthdate: new RangeDateUriParamHandler({
       field: 'birthdate',
     }).allowOperators('bet'),
-    timeperiod: new RangeDateUrlQueryFilterHandler({
+    timeperiod: new RangeDateUriParamHandler({
       field: 'timeperiod',
     }).defaultTo('nbet', [new Date(Date.now()), new Date(Date.now())]),
   });

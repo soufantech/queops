@@ -1,4 +1,5 @@
-import { ScalarParser, ValueParseResult } from './scalar-parser';
+import { ScalarParser } from './scalar-parser';
+import { ValueParseResult } from '../value-parser';
 
 function internalDateParser(value: string): ValueParseResult<Date> {
   const date = new Date(value);

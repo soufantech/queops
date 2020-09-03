@@ -1,16 +1,19 @@
 import { QueryBuilderInterface } from '../query-builder-interface';
-import { UrlQueryFiltersDescriptor } from './url-query-filters-descriptor';
 import { ParsedUrlQuery, decode as decodeQuerystring } from 'querystring';
-import { UrlQueryFilterHandler } from './url-query-filter-handler';
+import { UriParamHandler } from './uri-param-handler';
 
-type FilterCollection = [string, UrlQueryFilterHandler[]][];
+type HandlerCollection = [string, UriParamHandler[]][];
 
-export class UrlQueryFiltersProcessor {
-  private readonly filters: FilterCollection;
+export type UriParamsListing = {
+  [key: string]: UriParamHandler | UriParamHandler[];
+};
 
-  constructor(descriptor: UrlQueryFiltersDescriptor) {
-    this.filters = Object.entries(descriptor).map(([key, handlers]) => {
-      return [key, ([] as UrlQueryFilterHandler[]).concat(handlers)];
+export class UriParamsProcessor {
+  private readonly handlers: HandlerCollection;
+
+  constructor(descriptor: UriParamsListing) {
+    this.handlers = Object.entries(descriptor).map(([key, handlers]) => {
+      return [key, ([] as UriParamHandler[]).concat(handlers)];
     });
   }
 
@@ -25,7 +28,7 @@ export class UrlQueryFiltersProcessor {
 
     let completedFlawlessly = true;
 
-    this.filters.forEach(([field, handlers]) => {
+    this.handlers.forEach(([field, handlers]) => {
       const values = ([] as string[]).concat(queryStr[field] ?? []);
 
       handlers.forEach((handler) => {

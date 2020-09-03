@@ -1,4 +1,5 @@
-import { ScalarParser, ValueParseResult } from './scalar-parser';
+import { ScalarParser } from './scalar-parser';
+import { ValueParseResult } from '../value-parser';
 
 function internalIntegerParser(value: string): ValueParseResult<number> {
   const parsed = parseInt(value, 10);

@@ -45,10 +45,6 @@ export abstract class MiddlewaredQueryFilter<TOperand = unknown>
   ): QueryBuilderDispatcher | undefined {
     const input = this.runMiddlewares(filterInput);
 
-    if (input === undefined) {
-      return undefined;
-    }
-
-    return this.getDispatcher(input);
+    return input === undefined ? undefined : this.getDispatcher(input);
   }
 }

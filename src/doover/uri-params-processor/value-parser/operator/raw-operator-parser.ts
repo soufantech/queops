@@ -1,4 +1,4 @@
-import { ValueParser, ValueParseResult } from './operator-value-parser';
+import { ValueParser, ValueParseResult } from '../value-parser';
 
 type SplitOpcode = string;
 type SplitValue = string;
