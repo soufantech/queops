@@ -1,8 +1,8 @@
 import { MiddlewaredQueryFilter } from './middlewared-query-filter';
 import { QueryBuilderInterface } from '../query-builder-interface';
-import { QueryFilterInput, QueryBuilderDispatcher } from '../query-filter';
+import { QueryFilterInput, QueryBuilderDispatcher } from '.';
 
-export class StrictConditionQueryFilter<
+export class StrictComparisonQueryFilter<
   TOperand = unknown
 > extends MiddlewaredQueryFilter<TOperand> {
   public getDispatcher({

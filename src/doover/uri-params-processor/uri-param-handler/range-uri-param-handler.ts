@@ -1,4 +1,4 @@
-import { RangeConditionQueryFilter } from '../../query-filter';
+import { RangeComparisonQueryFilter } from '../../query-filter';
 import {
   ScalarParser,
   unescapedRangeParser,
@@ -28,7 +28,7 @@ export class RangeUriParamHandler<
     super(
       field,
       straightOperatorParser(unescapedRangeParser(parser, options)),
-      new RangeConditionQueryFilter<TOperand>(),
+      new RangeComparisonQueryFilter<TOperand>(),
     );
   }
 

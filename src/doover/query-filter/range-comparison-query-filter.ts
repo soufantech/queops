@@ -9,22 +9,22 @@ import {
 } from '../query-builder-interface';
 import { QueryFilterInput, QueryBuilderDispatcher } from './query-filter';
 
-const RANGE_CONDITION_QF_OPERATORS: RangeComparisonOperator[] = ['bet', 'nbet'];
+const RANGE_COMPARISON_OPERATORS: RangeComparisonOperator[] = ['bet', 'nbet'];
 
 const PRESET_MIDDLEWARES = [
-  createOperatorAllowlistMiddleware(RANGE_CONDITION_QF_OPERATORS),
+  createOperatorAllowlistMiddleware(RANGE_COMPARISON_OPERATORS),
 ];
 
-export type RangeConditionQueryFilterOptions<TOperand = unknown> = {
+export type RangeComparisonQueryFilterOptions<TOperand = unknown> = {
   middlewares?: QueryFilterMiddleware<TOperand>;
 };
 
-export class RangeConditionQueryFilter<
+export class RangeComparisonQueryFilter<
   TOperand = unknown
 > extends MiddlewaredQueryFilter<TOperand[]> {
   public constructor({
     middlewares,
-  }: RangeConditionQueryFilterOptions<TOperand[]> = {}) {
+  }: RangeComparisonQueryFilterOptions<TOperand[]> = {}) {
     super(
       (PRESET_MIDDLEWARES as QueryFilterMiddleware<TOperand[]>[]).concat(
         middlewares ?? [],

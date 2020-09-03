@@ -1,6 +1,6 @@
 import { QueryBuilder } from './query-builder';
 import { UriParamsProcessor, UriParam as Q } from '../uri-params-processor';
-import { StrictConditionQueryFilter } from '../query-filter';
+import { StrictComparisonQueryFilter } from '../query-filter';
 import { inspect } from 'util';
 
 const QUERYSTR = `\
@@ -24,7 +24,7 @@ test('integration', () => {
 
   qb.compareStrict('userId', 'asdf');
 
-  const dispatcher = new StrictConditionQueryFilter<string>().filter({
+  const dispatcher = new StrictComparisonQueryFilter<string>().filter({
     field: 'userId2',
     operand: 'asdf2',
     operator: null,
