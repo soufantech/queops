@@ -3,6 +3,7 @@ import {
   RangeDateUriParamHandlerOptions,
   ElementStringUriParamHandler,
   ElementStringUriParamHandlerOptions,
+  LogicalIntUriParamHandler,
 } from './uri-param-handler';
 
 export const UriParam = {
@@ -18,5 +19,9 @@ export const UriParam = {
     options?: ElementStringUriParamHandlerOptions,
   ): ElementStringUriParamHandler {
     return new ElementStringUriParamHandler(field, options);
+  },
+
+  logicalInt(field: string): LogicalIntUriParamHandler {
+    return new LogicalIntUriParamHandler(field);
   },
 };
