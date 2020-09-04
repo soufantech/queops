@@ -1,15 +1,12 @@
 import { MiddlewaredQueryFilter } from './middlewared-query-filter';
-import {
-  QueryFilterMiddleware,
-  createOperatorAllowlistMiddleware,
-} from './query-filter-middleware';
+import { createOperatorAllowlistMiddleware } from './query-filter-middleware';
 import {
   QueryBuilderInterface,
   LogicalComparisonOperator,
 } from '../query-builder-interface';
 import { QueryFilterInput, QueryBuilderDispatcher } from './query-filter';
 
-const LOGICAL_COMPARISON_OPERATORS: LogicalComparisonOperator[] = [
+const LOGICAL_COMPARISON_OPERATORS: readonly LogicalComparisonOperator[] = [
   'eq',
   'gte',
   'lte',
@@ -22,21 +19,11 @@ const PRESET_MIDDLEWARES = [
   createOperatorAllowlistMiddleware(LOGICAL_COMPARISON_OPERATORS),
 ];
 
-export type LogicalComparisonQueryFilterOptions<TOperand = unknown> = {
-  middlewares?: QueryFilterMiddleware<TOperand>;
-};
-
 export class LogicalComparisonQueryFilter<
   TOperand = unknown
 > extends MiddlewaredQueryFilter<TOperand> {
-  public constructor({
-    middlewares,
-  }: LogicalComparisonQueryFilterOptions<TOperand> = {}) {
-    super(
-      (PRESET_MIDDLEWARES as QueryFilterMiddleware<TOperand>[]).concat(
-        middlewares ?? [],
-      ),
-    );
+  public constructor() {
+    super(PRESET_MIDDLEWARES);
   }
 
   public getDispatcher({

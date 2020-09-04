@@ -12,11 +12,11 @@ stars=52&\
 ignore_me=please&\
 limit=40&\
 offset=1&\
-tags=in:linux,foss,architecture&`;
+include=yellow,cyan,grey,orange&\
+exclude=purple,pink&\
+tags=in:linux,foss,architecture`;
 
 test('integration', () => {
-  const qb = new QueryBuilder();
-
   const processor = new UriParamsProcessor({
     birthdate: Q.rangeDate('birthdate').allowOperators('bet'),
     timeperiod: Q.rangeDate('timeperiod'),
@@ -24,8 +24,13 @@ test('integration', () => {
     stars: Q.logicalInt('stars').denyOperators('ne', 'eq').defaultTo('gte', 1),
     limit: Q.limit().max(100).defaultTo(100),
     offset: Q.offset(),
+    include: Q.include()
+      .accept('blue', 'red', 'yellow', 'orange')
+      .defaultTo('blue', 'orange'),
+    exclude: Q.exclude().ignore('blue', 'red', 'yellow', 'orange'),
   });
 
+  const qb = new QueryBuilder();
   const success = processor.process(QUERYSTR, qb);
 
   qb.compareStrict('userId', 'asdf');

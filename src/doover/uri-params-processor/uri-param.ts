@@ -6,6 +6,10 @@ import {
   LogicalIntUriParamHandler,
   LimitUriParamHandler,
   OffsetUriParamHandler,
+  IncludeUriParamHandler,
+  IncludeUriParamHandlerOptions,
+  ExcludeUriParamHandler,
+  ExcludeUriParamHandlerOptions,
 } from './uri-param-handler';
 
 export const UriParam = {
@@ -33,5 +37,13 @@ export const UriParam = {
 
   offset(): OffsetUriParamHandler {
     return new OffsetUriParamHandler();
+  },
+
+  exclude(options?: ExcludeUriParamHandlerOptions): ExcludeUriParamHandler {
+    return new ExcludeUriParamHandler(options);
+  },
+
+  include(options?: IncludeUriParamHandlerOptions): IncludeUriParamHandler {
+    return new IncludeUriParamHandler(options);
   },
 };

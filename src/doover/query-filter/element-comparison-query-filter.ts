@@ -1,8 +1,5 @@
 import { MiddlewaredQueryFilter } from './middlewared-query-filter';
-import {
-  QueryFilterMiddleware,
-  createOperatorAllowlistMiddleware,
-} from './query-filter-middleware';
+import { createOperatorAllowlistMiddleware } from './query-filter-middleware';
 import {
   QueryBuilderInterface,
   ElementComparisonOperator,
@@ -15,21 +12,11 @@ const PRESET_MIDDLEWARES = [
   createOperatorAllowlistMiddleware(ELEMENT_COMPARISON_OPERATORS),
 ];
 
-export type ElementComparisonQueryFilterOptions<TOperand = unknown> = {
-  middlewares?: QueryFilterMiddleware<TOperand>;
-};
-
 export class ElementComparisonQueryFilter<
   TOperand = unknown
 > extends MiddlewaredQueryFilter<TOperand[]> {
-  public constructor({
-    middlewares,
-  }: ElementComparisonQueryFilterOptions<TOperand[]> = {}) {
-    super(
-      (PRESET_MIDDLEWARES as QueryFilterMiddleware<TOperand[]>[]).concat(
-        middlewares ?? [],
-      ),
-    );
+  public constructor() {
+    super(PRESET_MIDDLEWARES);
   }
 
   public getDispatcher({

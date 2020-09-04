@@ -8,3 +8,5 @@ export * from './element-comparison-query-filter';
 export * from './logical-comparison-query-filter';
 export * from './limit-query-filter';
 export * from './offset-query-filter';
+export * from './include-fields-query-filter';
+export * from './exclude-fields-query-filter';

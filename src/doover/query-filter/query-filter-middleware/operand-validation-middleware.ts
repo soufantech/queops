@@ -2,7 +2,7 @@ import { QueryFilterInput } from '../query-filter';
 import { QueryFilterMiddleware } from './query-filter-middleware';
 import { Validator } from '../validator';
 
-export function createOperandValidationMiddleware<TOperand = unknown>(
+export function createOperandValidationMiddleware<TOperand>(
   validator: Validator,
 ): QueryFilterMiddleware<TOperand> {
   return (filterInput: QueryFilterInput<TOperand>) => {

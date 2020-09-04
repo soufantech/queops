@@ -32,7 +32,7 @@ export abstract class MiddlewaredQueryFilter<TOperand = unknown>
           return input;
         }
 
-        return middleware(input);
+        return middleware<TOperand>(input);
       },
       filterInput,
     );
