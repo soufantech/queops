@@ -6,3 +6,5 @@ export * from './range-comparison-query-filter';
 export * from './strict-comparison-query-filter';
 export * from './element-comparison-query-filter';
 export * from './logical-comparison-query-filter';
+export * from './limit-query-filter';
+export * from './offset-query-filter';

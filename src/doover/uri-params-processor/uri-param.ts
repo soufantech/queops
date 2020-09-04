@@ -4,6 +4,8 @@ import {
   ElementStringUriParamHandler,
   ElementStringUriParamHandlerOptions,
   LogicalIntUriParamHandler,
+  LimitUriParamHandler,
+  OffsetUriParamHandler,
 } from './uri-param-handler';
 
 export const UriParam = {
@@ -23,5 +25,13 @@ export const UriParam = {
 
   logicalInt(field: string): LogicalIntUriParamHandler {
     return new LogicalIntUriParamHandler(field);
+  },
+
+  limit(): LimitUriParamHandler {
+    return new LimitUriParamHandler();
+  },
+
+  offset(): OffsetUriParamHandler {
+    return new OffsetUriParamHandler();
   },
 };

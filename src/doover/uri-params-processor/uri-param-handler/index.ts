@@ -6,3 +6,5 @@ export * from './element-uri-param-handler';
 export * from './element-string-uri-param-handler';
 export * from './logical-int-uri-param-handler';
 export * from './logical-uri-param-handler';
+export * from './limit-uri-param-handler';
+export * from './offset-uri-param-handler';

@@ -10,6 +10,8 @@ stars=ne:66&\
 stars=gt:21&\
 stars=52&\
 ignore_me=please&\
+limit=40&\
+offset=1&\
 tags=in:linux,foss,architecture&`;
 
 test('integration', () => {
@@ -17,12 +19,11 @@ test('integration', () => {
 
   const processor = new UriParamsProcessor({
     birthdate: Q.rangeDate('birthdate').allowOperators('bet'),
-    timeperiod: Q.rangeDate('timeperiod').defaultTo('nbet', [
-      new Date(Date.now()),
-      new Date(Date.now()),
-    ]),
+    timeperiod: Q.rangeDate('timeperiod'),
     tags: Q.elementString('searchTags'),
-    stars: Q.logicalInt('stars').denyOperators('ne', 'eq'),
+    stars: Q.logicalInt('stars').denyOperators('ne', 'eq').defaultTo('gte', 1),
+    limit: Q.limit().max(100).defaultTo(100),
+    offset: Q.offset(),
   });
 
   const success = processor.process(QUERYSTR, qb);
