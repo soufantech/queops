@@ -12,7 +12,7 @@ import {
   createOperatorDenylistMiddleware,
 } from '../../query-filter';
 
-export type ElementUriParamHandlerOptions = Extract<
+export type ElementUriParamHandlerOptions = Pick<
   UnescapedListParserOptions,
   'separator' | 'maxElements'
 >;

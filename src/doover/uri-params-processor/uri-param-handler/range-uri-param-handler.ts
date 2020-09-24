@@ -12,10 +12,7 @@ import {
   createOperatorDenylistMiddleware,
 } from '../../query-filter';
 
-export type RangeUriParamHandlerOptions = Extract<
-  UnescapedRangeParserOptions,
-  'separator'
->;
+export type RangeUriParamHandlerOptions = UnescapedRangeParserOptions;
 
 export class RangeUriParamHandler<
   TOperand = unknown
