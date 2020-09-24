@@ -1,0 +1,872 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "https://gitlab.com/packages/queops/src/schemas/querystring-definition.meta/1.0",
+  "title": "Queops querystring defition vocabulary meta-schema",
+  "type": "object",
+  "additionalProperties": {
+    "oneOf": [
+      {
+        "$ref": "#/$defs/urlQueryParam"
+      },
+      {
+        "type": "array",
+        "items": {
+          "$ref": "#/$defs/urlQueryParam"
+        },
+        "minItems": 1
+      }
+    ]
+  },
+  "$defs": {
+    "urlQueryParam": {
+      "allOf": [
+        {
+          "type": "object",
+          "properties": {
+            "examples": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "paramType"
+          ]
+        },
+        {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/strictInt"
+            },
+            {
+              "$ref": "#/$defs/strictFloat"
+            },
+            {
+              "$ref": "#/$defs/strictString"
+            },
+            {
+              "$ref": "#/$defs/strictBool"
+            },
+            {
+              "$ref": "#/$defs/elementDate"
+            },
+            {
+              "$ref": "#/$defs/elementString"
+            },
+            {
+              "$ref": "#/$defs/elementInt"
+            },
+            {
+              "$ref": "#/$defs/elementFloat"
+            },
+            {
+              "$ref": "#/$defs/logicalInt"
+            },
+            {
+              "$ref": "#/$defs/logicalFloat"
+            },
+            {
+              "$ref": "#/$defs/logicalString"
+            },
+            {
+              "$ref": "#/$defs/logicalDate"
+            },
+            {
+              "$ref": "#/$defs/rangeDate"
+            },
+            {
+              "$ref": "#/$defs/rangeInt"
+            },
+            {
+              "$ref": "#/$defs/rangeFloat"
+            },
+            {
+              "$ref": "#/$defs/order"
+            },
+            {
+              "$ref": "#/$defs/limit"
+            },
+            {
+              "$ref": "#/$defs/offset"
+            },
+            {
+              "$ref": "#/$defs/include"
+            },
+            {
+              "$ref": "#/$defs/exclude"
+            }
+          ]
+        }
+      ]
+    },
+    "elementOperator": {
+      "type": "string",
+      "enum": [
+        "in",
+        "nin"
+      ]
+    },
+    "rangeOperator": {
+      "type": "string",
+      "enum": [
+        "bet",
+        "nbet"
+      ]
+    },
+    "orderOperator": {
+      "type": "string",
+      "enum": [
+        "asc",
+        "desc"
+      ]
+    },
+    "logicalOperator": {
+      "type": "string",
+      "enum": [
+        "eq",
+        "ne",
+        "lt",
+        "gt",
+        "gte",
+        "lt",
+        "lte"
+      ]
+    },
+    "listProperties": {
+      "properties": {
+        "separator": {
+          "type": "string",
+          "default": ","
+        },
+        "maxElements": {
+          "$comment": "Default value is implementation dependent",
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "elementProperties": {
+      "allOf": [
+        {
+          "properties": {
+            "allowOperators": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/elementOperator"
+              },
+              "uniqueItems": true,
+              "minItems": 1
+            },
+            "denyOperators": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/elementOperator"
+              },
+              "uniqueItems": true,
+              "minItems": 1
+            }
+          }
+        },
+        {
+          "$ref": "#/$defs/listProperties"
+        }
+      ]
+    },
+    "rangeProperties": {
+      "properties": {
+        "allowOperators": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/rangeOperator"
+          },
+          "uniqueItems": true,
+          "minItems": 1
+        },
+        "denyOperators": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/rangeOperator"
+          },
+          "uniqueItems": true,
+          "minItems": 1
+        },
+        "separator": {
+          "type": "string",
+          "default": ".."
+        }
+      }
+    },
+    "logicalProperties": {
+      "properties": {
+        "allowOperators": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/logicalOperator"
+          },
+          "uniqueItems": true,
+          "minItems": 1
+        },
+        "denyOperators": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/logicalOperator"
+          },
+          "uniqueItems": true,
+          "minItems": 1
+        }
+      }
+    },
+    "projectionProperties": {
+      "allOf": [
+        {
+          "properties": {
+            "accept": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true,
+              "minItems": 1
+            },
+            "ignore": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true,
+              "minItems": 1
+            },
+            "defaultTo": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true,
+              "minItems": 1
+            }
+          }
+        },
+        {
+          "$ref": "#/$defs/listProperties"
+        }
+      ]
+    },
+    "strictInt": {
+      "title": "`strictInt` URI Query Filter",
+      "type": "object",
+      "properties": {
+        "paramType": {
+          "const": "strictInt"
+        },
+        "min": {
+          "type": "integer"
+        },
+        "max": {
+          "type": "integer"
+        },
+        "defaultTo": {
+          "type": "integer"
+        }
+      }
+    },
+    "strictFloat": {
+      "title": "`strictFloat` URI Query Filter",
+      "type": "object",
+      "properties": {
+        "paramType": {
+          "const": "strictFloat"
+        },
+        "min": {
+          "type": "number"
+        },
+        "max": {
+          "type": "number"
+        },
+        "defaultTo": {
+          "type": "number"
+        }
+      }
+    },
+    "strictString": {
+      "title": "`strictString` URI Query Filter",
+      "type": "object",
+      "properties": {
+        "paramType": {
+          "const": "strictString"
+        },
+        "defaultTo": {
+          "type": "string"
+        }
+      }
+    },
+    "strictBool": {
+      "title": "`strictBool` URI Query Filter",
+      "type": "object",
+      "properties": {
+        "paramType": {
+          "const": "strictBool"
+        },
+        "defaultTo": {
+          "type": "boolean"
+        }
+      }
+    },
+    "strictDate": {
+      "title": "`strictDate` URI Query Filter",
+      "type": "object",
+      "properties": {
+        "paramType": {
+          "const": "strictDate"
+        },
+        "defaultTo": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "elementString": {
+      "title": "`elementString` URI Query Filter",
+      "type": "object",
+      "allOf": [
+        {
+          "properties": {
+            "paramType": {
+              "const": "elementString"
+            },
+            "defaultTo": {
+              "type": "object",
+              "properties": {
+                "operand": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "uniqueItems": true,
+                  "minItems": 1
+                },
+                "operator": {
+                  "$ref": "#/$defs/elementOperator"
+                }
+              },
+              "required": [
+                "operand",
+                "operator"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "$ref": "#/$defs/elementProperties"
+        }
+      ]
+    },
+    "elementFloat": {
+      "title": "`elementFloat` URI Query Filter",
+      "type": "object",
+      "allOf": [
+        {
+          "properties": {
+            "paramType": {
+              "const": "elementFloat"
+            },
+            "defaultTo": {
+              "type": "object",
+              "properties": {
+                "operand": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  },
+                  "uniqueItems": true,
+                  "minItems": 1
+                },
+                "operator": {
+                  "$ref": "#/$defs/elementOperator"
+                }
+              },
+              "required": [
+                "operand",
+                "operator"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "$ref": "#/$defs/elementProperties"
+        }
+      ]
+    },
+    "elementInt": {
+      "title": "`elementInt` URI Query Filter",
+      "type": "object",
+      "allOf": [
+        {
+          "properties": {
+            "paramType": {
+              "const": "elementInt"
+            },
+            "defaultTo": {
+              "type": "object",
+              "properties": {
+                "operand": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  },
+                  "uniqueItems": true,
+                  "minItems": 1
+                },
+                "operator": {
+                  "$ref": "#/$defs/elementOperator"
+                }
+              },
+              "required": [
+                "operand",
+                "operator"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "$ref": "#/$defs/elementProperties"
+        }
+      ]
+    },
+    "elementDate": {
+      "title": "`elementDate` URI Query Filter",
+      "type": "object",
+      "allOf": [
+        {
+          "properties": {
+            "paramType": {
+              "const": "elementDate"
+            },
+            "defaultTo": {
+              "type": "object",
+              "properties": {
+                "operand": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "uniqueItems": true,
+                  "minItems": 1
+                },
+                "operator": {
+                  "$ref": "#/$defs/elementOperator"
+                }
+              },
+              "required": [
+                "operand",
+                "operator"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "$ref": "#/$defs/elementProperties"
+        }
+      ]
+    },
+    "rangeInt": {
+      "title": "`rangeInt` URI Query Filter",
+      "type": "object",
+      "allOf": [
+        {
+          "properties": {
+            "paramType": {
+              "const": "rangeInt"
+            },
+            "defaultTo": {
+              "type": "object",
+              "properties": {
+                "operand": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "integer"
+                    }
+                  ],
+                  "minItems": 2,
+                  "maxItems": 2
+                },
+                "operator": {
+                  "$ref": "#/$defs/rangeOperator"
+                }
+              },
+              "required": [
+                "operand",
+                "operator"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "$ref": "#/$defs/rangeProperties"
+        }
+      ]
+    },
+    "rangeFloat": {
+      "title": "`rangeFloat` URI Query Filter",
+      "type": "object",
+      "allOf": [
+        {
+          "properties": {
+            "paramType": {
+              "const": "rangeFloat"
+            },
+            "defaultTo": {
+              "type": "object",
+              "properties": {
+                "operand": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "number"
+                    }
+                  ],
+                  "minItems": 2,
+                  "maxItems": 2
+                },
+                "operator": {
+                  "$ref": "#/$defs/rangeOperator"
+                }
+              },
+              "required": [
+                "operand",
+                "operator"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "$ref": "#/$defs/rangeProperties"
+        }
+      ]
+    },
+    "rangeDate": {
+      "title": "`rangeDate` URI Query Filter",
+      "type": "object",
+      "allOf": [
+        {
+          "properties": {
+            "paramType": {
+              "const": "rangeDate"
+            },
+            "defaultTo": {
+              "type": "object",
+              "properties": {
+                "operand": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  ],
+                  "minItems": 2,
+                  "maxItems": 2
+                },
+                "operator": {
+                  "$ref": "#/$defs/rangeOperator"
+                }
+              },
+              "required": [
+                "operand",
+                "operator"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "$ref": "#/$defs/rangeProperties"
+        }
+      ]
+    },
+    "logicalInt": {
+      "title": "`logicalInt` URI Query Filter",
+      "type": "object",
+      "allOf": [
+        {
+          "properties": {
+            "paramType": {
+              "const": "logicalInt"
+            },
+            "defaultTo": {
+              "type": "object",
+              "properties": {
+                "operand": {
+                  "type": "integer"
+                },
+                "operator": {
+                  "$ref": "#/$defs/logicalOperator"
+                }
+              },
+              "required": [
+                "operand",
+                "operator"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "$ref": "#/$defs/logicalProperties"
+        }
+      ]
+    },
+    "logicalFloat": {
+      "title": "`logicalFloat` URI Query Filter",
+      "type": "object",
+      "allOf": [
+        {
+          "properties": {
+            "paramType": {
+              "const": "logicalFloat"
+            },
+            "defaultTo": {
+              "type": "object",
+              "properties": {
+                "operand": {
+                  "type": "number"
+                },
+                "operator": {
+                  "$ref": "#/$defs/logicalOperator"
+                }
+              },
+              "required": [
+                "operand",
+                "operator"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "$ref": "#/$defs/logicalProperties"
+        }
+      ]
+    },
+    "logicalDate": {
+      "title": "`logicalDate` URI Query Filter",
+      "type": "object",
+      "allOf": [
+        {
+          "properties": {
+            "paramType": {
+              "const": "logicalDate"
+            },
+            "defaultTo": {
+              "type": "object",
+              "properties": {
+                "operand": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "operator": {
+                  "$ref": "#/$defs/logicalOperator"
+                }
+              },
+              "required": [
+                "operand",
+                "operator"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "$ref": "#/$defs/logicalProperties"
+        }
+      ]
+    },
+    "logicalString": {
+      "title": "`logicalString` URI Query Filter",
+      "type": "object",
+      "allOf": [
+        {
+          "properties": {
+            "paramType": {
+              "const": "logicalString"
+            },
+            "defaultTo": {
+              "type": "object",
+              "properties": {
+                "operand": {
+                  "type": "string"
+                },
+                "operator": {
+                  "$ref": "#/$defs/logicalOperator"
+                }
+              },
+              "required": [
+                "operand",
+                "operator"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "$ref": "#/$defs/logicalProperties"
+        }
+      ]
+    },
+    "order": {
+      "type": "object",
+      "properties": {
+        "paramType": {
+          "const": "order"
+        },
+        "allowOperators": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/orderOperator"
+          },
+          "uniqueItems": true,
+          "minItems": 1
+        },
+        "denyOperators": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/orderOperator"
+          },
+          "uniqueItems": true,
+          "minItems": 1
+        },
+        "defaultTo": {
+          "type": "object",
+          "properties": {
+            "operand": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "operator": {
+              "$ref": "#/$defs/orderOperator"
+            }
+          },
+          "required": [
+            "operand",
+            "operator"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "limit": {
+      "title": "`limit` URI Query Filter",
+      "type": "object",
+      "properties": {
+        "paramType": {
+          "const": "limit"
+        },
+        "min": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max": {
+          "type": "integer"
+        },
+        "defaultTo": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "offset": {
+      "title": "`offset` URI Query Filter",
+      "type": "object",
+      "properties": {
+        "paramType": {
+          "const": "offset"
+        },
+        "min": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max": {
+          "type": "integer"
+        },
+        "defaultTo": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "include": {
+      "title": "`include` URI Query Filter",
+      "type": "object",
+      "allOf": [
+        {
+          "properties": {
+            "paramType": {
+              "const": "include"
+            }
+          }
+        },
+        {
+          "$ref": "#/$defs/projectionProperties"
+        }
+      ]
+    },
+    "exclude": {
+      "title": "`exclude` URI Query Filter",
+      "type": "object",
+      "allOf": [
+        {
+          "properties": {
+            "paramType": {
+              "const": "exclude"
+            }
+          }
+        },
+        {
+          "$ref": "#/$defs/projectionProperties"
+        }
+      ]
+    },
+    "search": {
+      "title": "`search` URI Query Filter",
+      "type": "object",
+      "allOf": [
+        {
+          "properties": {
+            "paramType": {
+              "const": "search"
+            },
+            "defaultTo": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true,
+              "minItems": 1
+            }
+          }
+        },
+        {
+          "$ref": "#/$defs/listProperties"
+        }
+      ]
+    }
+  }
+}

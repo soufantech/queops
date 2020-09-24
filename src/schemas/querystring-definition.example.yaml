@@ -1,0 +1,80 @@
+---
+city:
+  - paramType: strictString
+    examples:
+      - city=Juiz de Fora
+      - city=Los Angeles
+  - paramType: order
+    defaultTo:
+      operator: asc
+      operand: 1
+    examples:
+      - 'city=asc:1'
+      - 'city=desc:1'
+tags:
+  paramType: elementString
+  maxElements: 3
+  examples:
+    - 'tags=in:parking,kids'
+    - 'tags=nin:pub,club'
+stars:
+  - paramType: logicalString
+    allowOperators:
+      - eq
+      - gt
+      - gte
+    examples:
+      - 'stars=eq:3'
+      - 'stars=gt:7'
+  - paramType: order
+    allowOperators:
+      - asc
+    examples:
+      - 'stars=asc:1'
+vacancy:
+  paramType: rangeDate
+  examples:
+    - 'vacancy=2020-09-09T17:30..2020-09-10T22'
+score:
+  - paramType: rangeFloat
+    separator: '~'
+    examples:
+      - 'score=nbet:-1.52~3.82'
+      - 'score=bet:0.5~8.95'
+  - paramType: logicalFloat
+    denyOperators:
+      - eq
+      - ne
+    examples:
+      - 'score=gt:-1.52'
+      - 'score=lte:9.95'
+include:
+  paramType: include
+  ignore:
+    - createdAt
+    - updatedAt
+  defaultTo:
+    - stars
+    - name
+    - city
+  examples:
+    - 'include=stars,name,city'
+exclude:
+  paramType: exclude
+  accept:
+    - stars
+    - name
+    - city
+  examples:
+    - exclude=stars
+limit:
+  paramType: limit
+  min: 1
+  max: 100
+  defaultTo: 50
+  examples:
+    - limit=25
+offset:
+  paramType: offset
+  examples:
+    - offset=2
