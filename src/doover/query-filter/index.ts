@@ -10,3 +10,4 @@ export * from './limit-query-filter';
 export * from './offset-query-filter';
 export * from './include-fields-query-filter';
 export * from './exclude-fields-query-filter';
+export * from './order-query-filter';

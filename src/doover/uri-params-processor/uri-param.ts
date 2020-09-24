@@ -10,6 +10,7 @@ import {
   IncludeUriParamHandlerOptions,
   ExcludeUriParamHandler,
   ExcludeUriParamHandlerOptions,
+  OrderUriParamHandler,
 } from './uri-param-handler';
 
 export const UriParam = {
@@ -45,5 +46,9 @@ export const UriParam = {
 
   include(options?: IncludeUriParamHandlerOptions): IncludeUriParamHandler {
     return new IncludeUriParamHandler(options);
+  },
+
+  order(field: string): OrderUriParamHandler {
+    return new OrderUriParamHandler(field);
   },
 };

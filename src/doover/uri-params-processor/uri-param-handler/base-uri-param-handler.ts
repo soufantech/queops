@@ -5,6 +5,7 @@ import {
   Validator,
   createOperandValidationMiddleware,
   QueryFilterInput,
+  QueryFilterMiddleware,
 } from '../../query-filter';
 import { ValueParser } from '../value-parser';
 
@@ -73,6 +74,12 @@ export class BaseUriParamHandler<TOperand = unknown>
 
   public validateWith(validator: Validator): this {
     this.filter.with(createOperandValidationMiddleware(validator));
+
+    return this;
+  }
+
+  public withMiddleware(middleware: QueryFilterMiddleware<TOperand>): this {
+    this.filter.with(middleware);
 
     return this;
   }

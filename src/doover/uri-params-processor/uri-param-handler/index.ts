@@ -10,3 +10,4 @@ export * from './limit-uri-param-handler';
 export * from './offset-uri-param-handler';
 export * from './include-uri-param-handler';
 export * from './exclude-uri-param-handler';
+export * from './order-uri-param-handler';
