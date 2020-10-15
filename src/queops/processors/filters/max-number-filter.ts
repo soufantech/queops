@@ -7,7 +7,7 @@ export function createMaxNumberFilter(
   maxNumber: number,
 ): Filter<number, OperatorSuperType> {
   return createOperandFilter<number>((operand: number) => {
-    if (operand >= maxNumber) {
+    if (operand > maxNumber) {
       return failure(`Operand "${operand}" exceeded maximum limit`);
     }
 

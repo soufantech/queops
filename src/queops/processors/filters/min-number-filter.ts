@@ -7,7 +7,7 @@ export function createMinNumberFilter(
   minNumber: number,
 ): Filter<number, OperatorSuperType> {
   return createOperandFilter<number>((operand: number) => {
-    if (operand <= minNumber) {
+    if (operand < minNumber) {
       return failure(`Operand "${operand}" exceeded minimum limit`);
     }
 
