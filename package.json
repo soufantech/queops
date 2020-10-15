@@ -34,6 +34,7 @@
   "devDependencies": {
     "@commitlint/cli": "^9.1.1",
     "@commitlint/config-conventional": "^9.1.1",
+    "@types/hapi__joi": "^17.1.6",
     "@types/jest": "^26.0.4",
     "@types/node": "^14.0.23",
     "@typescript-eslint/eslint-plugin": "^3.6.1",
@@ -55,7 +56,8 @@
     "semi": true,
     "trailingComma": "all",
     "singleQuote": true,
-    "tabWidth": 2
+    "tabWidth": 2,
+    "printWidth": 80
   },
   "husky": {
     "hooks": {

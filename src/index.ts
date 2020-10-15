@@ -1,2 +1,2 @@
-export * from './querystr-model';
-export * from './query-builder';
+export * from './queops';
+export * from './queops-sequelize';
