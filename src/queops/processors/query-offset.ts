@@ -42,7 +42,7 @@ function buildFilters({
   return filters;
 }
 
-const NAME = 'QUERY_LIMIT';
+const NAME = 'QUERY_OFFSET';
 
 export class QueryOffsetProcessor extends QueryProcessorImpl<number, null> {
   constructor(options: QueryOffsetProcessorOptions = {}) {
