@@ -6,7 +6,6 @@ import {
   LogicalOperator,
   OrderOperator,
   RangeOperator,
-  ProjectOperator,
 } from '../queries';
 
 import { QueryBuilder } from '../query-builder';
@@ -42,14 +41,6 @@ export class MockQueryBuilder implements QueryBuilder {
     this.logs.push({ method: 'whereEqual', field, operand });
   }
 
-  queryExclude(field: string, excludedFields: string[]): void {
-    this.logs.push({ method: 'queryExclude', field, excludedFields });
-  }
-
-  queryInclude(field: string, includedFields: string[]): void {
-    this.logs.push({ method: 'queryInclude', field, includedFields });
-  }
-
   queryPopulate(field: string, populateList: string[]): void {
     this.logs.push({ method: 'queryPopulate', field, populateList });
   }
@@ -70,12 +61,12 @@ export class MockQueryBuilder implements QueryBuilder {
     this.logs.push({ method: 'querySearch', field, search });
   }
 
-  queryProject(
-    field: string,
-    operator: ProjectOperator,
-    fields: string[],
-  ): void {
-    this.logs.push({ method: 'queryProject', field, operator, fields });
+  queryInclude(field: string, includes: string[]): void {
+    this.logs.push({ method: 'queryInclude', field, includes });
+  }
+
+  queryExclude(field: string, excludes: string[]): void {
+    this.logs.push({ method: 'queryExclude', field, excludes });
   }
 
   getLogs(): any[] {

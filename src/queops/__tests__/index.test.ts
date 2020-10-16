@@ -33,8 +33,7 @@ test('integration test', () => {
       }),
       Q.queryOrder(),
     ],
-    include_fields: Q.queryProject({
-      forbiddenOperators: ['inc'],
+    include_fields: Q.queryInclude({
       acceptedElements: ['stars', 'tags'],
     }),
     location: Q.querySearch({}),

@@ -37,8 +37,10 @@ import {
   RangeIntProcessorOptions,
   QueryOrderProcessor,
   QueryOrderProcessorOptions,
-  QueryProjectProcessorOptions,
-  QueryProjectProcessor,
+  QueryIncludeProcessorOptions,
+  QueryIncludeProcessor,
+  QueryExcludeProcessorOptions,
+  QueryExcludeProcessor,
   QuerySearchProcessorOptions,
   QuerySearchProcessor,
 } from './processors';
@@ -176,11 +178,18 @@ export function queryOrder(
   return new QueryOrderProcessor(options);
 }
 
-export function queryProject(
+export function queryInclude(
   this: void,
-  options?: QueryProjectProcessorOptions,
-): QueryProjectProcessor {
-  return new QueryProjectProcessor(options);
+  options?: QueryIncludeProcessorOptions,
+): QueryIncludeProcessor {
+  return new QueryIncludeProcessor(options);
+}
+
+export function queryExclude(
+  this: void,
+  options?: QueryExcludeProcessorOptions,
+): QueryExcludeProcessor {
+  return new QueryExcludeProcessor(options);
 }
 
 export function querySearch(

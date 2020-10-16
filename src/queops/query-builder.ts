@@ -3,7 +3,6 @@ import {
   LogicalOperator,
   OrderOperator,
   RangeOperator,
-  ProjectOperator,
 } from './queries';
 
 export interface QueryBuilder {
@@ -23,11 +22,8 @@ export interface QueryBuilder {
     rangeTuple: [TOperand, TOperand],
   ): void;
   whereEqual<TOperand>(field: string, operand: TOperand): void;
-  queryProject(
-    field: string,
-    operator: ProjectOperator,
-    projections: string[],
-  ): void;
+  queryInclude(field: string, includes: string[]): void;
+  queryExclude(field: string, excludes: string[]): void;
   queryLimit(field: string, limit: number): void;
   queryOffset(field: string, offset: number): void;
   queryOrder(field: string, order: OrderOperator, priority: number): void;

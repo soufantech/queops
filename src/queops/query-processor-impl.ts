@@ -59,6 +59,7 @@ export type QueryProcessorParams<
   createAction: QueryActionFactory<TOperand, TOperator>;
   name: string;
   defaultValue?: QueryValue<TOperand, TOperator>;
+  // bindingName?: string;
 };
 
 type SubNotice = Pick<Notice, 'message' | 'code'>;
@@ -69,6 +70,7 @@ export class QueryProcessorImpl<TOperand, TOperator extends OperatorSuperType> {
   private readonly createAction: QueryActionFactory<TOperand, TOperator>;
   private readonly name: string;
   private readonly defaultValue?: QueryValue<TOperand, TOperator>;
+  // private readonly bindingName?: string;
 
   constructor(params: QueryProcessorParams<TOperand, TOperator>) {
     this.createAction = params.createAction;
@@ -76,10 +78,12 @@ export class QueryProcessorImpl<TOperand, TOperator extends OperatorSuperType> {
     this.parser = params.parser;
     this.name = params.name;
     this.defaultValue = params.defaultValue;
+    // this.bindingName = params.bindingName;
   }
 
   public process(field: string, rawValues: string[]): QueryProcessingResult {
     const resultBuilder = new ResultBuilder(this.name, field, rawValues);
+    // const bindingName = this.bindingName ?? field;
 
     const queryResult = this.parse(rawValues).map((query) => {
       return this.runFilters(query);
