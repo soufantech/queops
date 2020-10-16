@@ -22,6 +22,7 @@ export type QueryProjectionProcessorBaseOptions = {
   minElements?: number;
   filter?: OperandFilterMapper<string[]>;
   defaultValue?: IncludeQueryValue;
+  bindingName?: string;
 };
 
 export type QueryProjectionProcessorBaseParams = {
@@ -83,6 +84,7 @@ export class QueryProjectionProcessorBase extends QueryProcessorImpl<
       filters: buildFilters(options),
       name: params.name,
       createAction: params.createAction,
+      bindingName: options.bindingName,
     });
   }
 }

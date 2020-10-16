@@ -21,6 +21,7 @@ export type RangeProcessorBaseOptions<TOperand> = {
   forbiddenOperators?: RangeOperator[];
   filter?: OperandFilterMapper<[TOperand, TOperand]>;
   defaultValue?: RangeQueryValue<TOperand>;
+  bindingName?: string;
 };
 
 export type RangeProcessorBaseParams<TOperand> = {
@@ -73,6 +74,7 @@ export class RangeProcessorBase<TOperand> extends QueryProcessorImpl<
       name: params.name,
       defaultValue: options.defaultValue,
       createAction: createRangeAction,
+      bindingName: options.bindingName,
     });
   }
 }

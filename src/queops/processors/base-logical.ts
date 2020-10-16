@@ -15,6 +15,7 @@ export type LogicalProcessorBaseOptions<TOperand> = {
   forbiddenOperators?: LogicalOperator[];
   filter?: OperandFilterMapper<TOperand>;
   defaultValue?: LogicalQueryValue<TOperand>;
+  bindingName?: string;
 };
 
 export type LogicalProcessorBaseParams<TOperand> = {
@@ -69,6 +70,7 @@ export class LogicalProcessorBase<TOperand> extends QueryProcessorImpl<
       name: params.name,
       defaultValue: options.defaultValue,
       createAction: createLogicalAction,
+      bindingName: options.bindingName,
     });
   }
 }

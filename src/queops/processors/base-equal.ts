@@ -6,6 +6,7 @@ import { createEqualAction } from './actions';
 export type EqualProcessorBaseOptions<TOperand> = {
   filter?: OperandFilterMapper<TOperand>;
   defaultValue?: TOperand;
+  bindingName?: string;
 };
 
 export type EqualProcessorBaseParams<TOperand> = {
@@ -43,6 +44,7 @@ export class EqualProcessorBase<TOperand> extends QueryProcessorImpl<
       defaultValue: options.defaultValue
         ? { operator: null, operand: options.defaultValue }
         : undefined,
+      bindingName: options.bindingName,
     });
   }
 }

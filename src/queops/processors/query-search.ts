@@ -6,6 +6,7 @@ import { createSearchAction } from './actions';
 export type QuerySearchProcessorOptions = {
   filter?: OperandFilterMapper<string>;
   defaultValue?: string;
+  bindingName?: string;
 };
 
 const NAME = 'QUERY_SEARCH';
@@ -32,6 +33,7 @@ export class QuerySearchProcessor extends QueryProcessorImpl<string, null> {
       defaultValue: options.defaultValue
         ? { operator: null, operand: options.defaultValue }
         : undefined,
+      bindingName: options.bindingName,
     });
   }
 }

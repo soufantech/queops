@@ -59,7 +59,7 @@ export type QueryProcessorParams<
   createAction: QueryActionFactory<TOperand, TOperator>;
   name: string;
   defaultValue?: QueryValue<TOperand, TOperator>;
-  // bindingName?: string;
+  bindingName?: string;
 };
 
 type SubNotice = Pick<Notice, 'message' | 'code'>;
@@ -70,7 +70,7 @@ export class QueryProcessorImpl<TOperand, TOperator extends OperatorSuperType> {
   private readonly createAction: QueryActionFactory<TOperand, TOperator>;
   private readonly name: string;
   private readonly defaultValue?: QueryValue<TOperand, TOperator>;
-  // private readonly bindingName?: string;
+  private readonly bindingName?: string;
 
   constructor(params: QueryProcessorParams<TOperand, TOperator>) {
     this.createAction = params.createAction;
@@ -78,23 +78,33 @@ export class QueryProcessorImpl<TOperand, TOperator extends OperatorSuperType> {
     this.parser = params.parser;
     this.name = params.name;
     this.defaultValue = params.defaultValue;
-    // this.bindingName = params.bindingName;
+    this.bindingName = params.bindingName;
   }
 
   public process(field: string, rawValues: string[]): QueryProcessingResult {
     const resultBuilder = new ResultBuilder(this.name, field, rawValues);
-    // const bindingName = this.bindingName ?? field;
+    const bindingName = this.bindingName ?? field;
+
+    // TODO: improve general flow with a full-blown monadic result object.
 
     const queryResult = this.parse(rawValues).map((query) => {
       return this.runFilters(query);
     });
 
     if (queryResult.isFailure()) {
-      resultBuilder.addNotice(queryResult.unwrap());
+      const subNotice = queryResult.unwrap();
+
+      // Fails silentlty if parsing failed. This will change
+      // when parsers were refactored to return `Result`
+      if (subNotice.code !== 'QUERY_UNDETECTED') {
+        resultBuilder.addNotice(subNotice);
+      }
 
       if (this.defaultValue) {
         resultBuilder
-          .setAction(this.createAction({ field, ...this.defaultValue }))
+          .setAction(
+            this.createAction({ field: bindingName, ...this.defaultValue }),
+          )
           .addNotice({
             code: 'USING_DEFAULT',
             message: 'Using default value for this query',
@@ -102,7 +112,7 @@ export class QueryProcessorImpl<TOperand, TOperator extends OperatorSuperType> {
       }
     } else {
       resultBuilder.setAction(
-        this.createAction({ field, ...queryResult.unwrap() }),
+        this.createAction({ field: bindingName, ...queryResult.unwrap() }),
       );
     }
 
@@ -133,13 +143,7 @@ export class QueryProcessorImpl<TOperand, TOperator extends OperatorSuperType> {
           return result;
         }
 
-        const parsingResult = this.parseValue(rawValue);
-
-        if (parsingResult.isSuccess()) {
-          return parsingResult;
-        }
-
-        return result;
+        return this.parseValue(rawValue);
       },
       failure({
         code: 'QUERY_UNDETECTED',

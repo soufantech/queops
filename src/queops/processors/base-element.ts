@@ -24,6 +24,7 @@ export type ElementProcessorBaseOptions<TOperand> = {
   minElements?: number;
   filter?: OperandFilterMapper<TOperand[]>;
   defaultValue?: ElementQueryValue<TOperand>;
+  bindingName?: string;
 };
 
 export type ElementProcessorBaseParams<TOperand> = {
@@ -91,6 +92,7 @@ export class ElementProcessorBase<TOperand> extends QueryProcessorImpl<
       name: params.name,
       createAction: createElementAction,
       defaultValue: options.defaultValue,
+      bindingName: options.bindingName,
     });
   }
 }

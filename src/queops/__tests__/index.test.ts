@@ -5,15 +5,7 @@ import { inspect } from 'util';
 const QUERY_STRING = `\
 category=restaurants&\
 include_fields=inc:category,stars,city&\
-stars=gt:5&\
-stars=asc:1&\
-location=Juiz%20de%20Fora&\
-search=desconto&\
-available=bet:2020-01-20..2020-01-26T18:30&\
-available=desc:2&\
-include_fields=inc:category,stars,city&\
 tags=in:kids,pets,parking&\
-limit=100&\
 offset=4`;
 
 test('integration test', () => {
@@ -35,6 +27,7 @@ test('integration test', () => {
     ],
     include_fields: Q.queryInclude({
       acceptedElements: ['stars', 'tags'],
+      bindingName: 'includeFields',
     }),
     location: Q.querySearch({}),
   });
