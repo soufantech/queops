@@ -59,6 +59,8 @@ export type QueryProcessorParams<
 
 type SubNotice = Pick<Notice, 'message' | 'code'>;
 
+const IGNORED_ERROR_CODES = ['QUERY_UNDETECTED', 'PARSING_FAILED'];
+
 export class QueryProcessorImpl<TOperand, TOperator extends OperatorSuperType> {
   private readonly parser: ValueParser<TOperand>;
   private readonly filters: Filter<TOperand, TOperator>[];
@@ -80,47 +82,44 @@ export class QueryProcessorImpl<TOperand, TOperator extends OperatorSuperType> {
     const resultBuilder = new ResultBuilder(this.name, field, rawValues);
     const bindingName = this.bindingName ?? field;
 
-    // TODO: improve general flow with a full-blown monadic result object.
-
-    const queryResult = this.parse(rawValues).map((query) => {
-      return this.runFilters(query);
-    });
-
-    if (queryResult.isFailure()) {
-      const subNotice = queryResult.unwrap();
-
-      // Fails silentlty if parsing failed. This will change
-      // when parsers were refactored to return `Result`
-      if (subNotice.code !== 'QUERY_UNDETECTED') {
-        resultBuilder.addNotice(subNotice);
-      }
-
-      if (this.defaultValue) {
-        resultBuilder
-          .setAction(
-            this.createAction({ field: bindingName, ...this.defaultValue }),
-          )
-          .addNotice({
-            code: 'USING_DEFAULT',
-            message: 'Using default value for this query',
-          });
-      }
-    } else {
-      resultBuilder.setAction(
-        this.createAction({ field: bindingName, ...queryResult.unwrap() }),
-      );
-    }
-
-    return resultBuilder.getResult();
+    return this.parse(rawValues)
+      .map((query) => this.runFilters(query))
+      .flatMap<ResultBuilder>((q) =>
+        resultBuilder.setAction(
+          this.createAction({ field: bindingName, ...q }),
+        ),
+      )
+      .onFailure((f) => {
+        if (!IGNORED_ERROR_CODES.includes(f.code)) {
+          resultBuilder.addNotice(f);
+        }
+      })
+      .recover(() =>
+        this.defaultValue === undefined
+          ? resultBuilder
+          : resultBuilder
+              .setAction(
+                this.createAction({ field: bindingName, ...this.defaultValue }),
+              )
+              .addNotice({
+                code: 'USING_DEFAULT',
+                message: 'Using default value for this query',
+              }),
+      )
+      .getOrThrow()
+      .getResult();
   }
 
   private parseValue(
     rawValue: string,
-  ): Result<string, QueryValue<TOperand, TOperator>> {
+  ): Result<SubNotice, QueryValue<TOperand, TOperator>> {
     const { opcode, value } = this.parser(rawValue);
 
     if (value === undefined) {
-      return failure('Parsing failed');
+      return failure({
+        code: 'PARSING_FAILED',
+        message: 'Parsing failed',
+      });
     }
 
     return success({
@@ -129,24 +128,64 @@ export class QueryProcessorImpl<TOperand, TOperator extends OperatorSuperType> {
     });
   }
 
+  // private parse(
+  //   rawValues: string[],
+  // ): Result<SubNotice, QueryValue<TOperand, TOperator>> {
+  //   return rawValues.reduce<Result<SubNotice, QueryValue<TOperand, TOperator>>>(
+  //     (result, rawValue) => {
+  //       if (result.isSuccess()) {
+  //         return result;
+  //       }
+
+  //       return this.parseValue(rawValue);
+  //     },
+  //     failure<SubNotice, QueryValue<TOperand, TOperator>>({
+  //       code: 'QUERY_UNDETECTED',
+  //       message:
+  //         'Could not detect a compatible well-formed query amongst the given values',
+  //     }),
+  //   );
+  // }
+
   private parse(
     rawValues: string[],
   ): Result<SubNotice, QueryValue<TOperand, TOperator>> {
     return rawValues.reduce<Result<SubNotice, QueryValue<TOperand, TOperator>>>(
       (result, rawValue) => {
-        if (result.isSuccess()) {
-          return result;
-        }
-
-        return this.parseValue(rawValue);
+        return result.mapFailure(() => this.parseValue(rawValue));
       },
-      failure({
+      failure<SubNotice, QueryValue<TOperand, TOperator>>({
         code: 'QUERY_UNDETECTED',
         message:
-          'Could not detect a compatible well-formed query amongst the given values',
+          'Could not detect a well-formed query amongst the given values',
       }),
     );
   }
+
+  // private runFilters(
+  //   structuredQuery: QueryValue<TOperand, TOperator>,
+  // ): Result<SubNotice, QueryValue<TOperand, TOperator>> {
+  //   return this.filters.reduce<
+  //     Result<SubNotice, QueryValue<TOperand, TOperator>>
+  //   >((result, filter) => {
+  //     if (result.isFailure()) {
+  //       return result;
+  //     }
+
+  //     const filterResult = filter(structuredQuery);
+
+  //     if (filterResult.isFailure()) {
+  //       return failure<SubNotice, QueryValue<TOperand, TOperator>>({
+  //         code: 'INVALID_VALUE',
+  //         message: filterResult.get(),
+  //       });
+  //     } else {
+  //       return success<SubNotice, QueryValue<TOperand, TOperator>>(
+  //         filterResult.get(),
+  //       );
+  //     }
+  //   }, success(structuredQuery));
+  // }
 
   private runFilters(
     structuredQuery: QueryValue<TOperand, TOperator>,
@@ -154,20 +193,14 @@ export class QueryProcessorImpl<TOperand, TOperator extends OperatorSuperType> {
     return this.filters.reduce<
       Result<SubNotice, QueryValue<TOperand, TOperator>>
     >((result, filter) => {
-      if (result.isFailure()) {
-        return result;
-      }
-
-      const filterResult = filter(structuredQuery);
-
-      if (filterResult.isFailure()) {
-        return failure<SubNotice, QueryValue<TOperand, TOperator>>({
-          code: 'INVALID_VALUE',
-          message: filterResult.unwrap(),
-        });
-      }
-
-      return filterResult;
+      return result.map((s) =>
+        filter(s).flatMapFailure((errorMessage) => {
+          return {
+            code: 'INVALID_VALUE',
+            message: errorMessage,
+          };
+        }),
+      );
     }, success(structuredQuery));
   }
 }

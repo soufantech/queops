@@ -6,7 +6,9 @@ const QUERY_STRING = `\
 category=restaurants&\
 include_fields=inc:category,stars,city&\
 tags=in:kids,pets,parking&\
-offset=4`;
+available=nbet:2020-01..2020-04&\
+offset=4&\
+limit=800`;
 
 test('integration test', () => {
   const processor = new QuerystringProcessor({

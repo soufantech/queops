@@ -9,7 +9,7 @@ export function createMaxElementsFilter<TOperand extends unknown[]>(
   return createOperandFilter<TOperand>((operand: TOperand) => {
     if (operand.length > maxElements) {
       return failure(
-        `Number of elements violates maximum limit of ${maxElements}`,
+        `The number of elements in list (${operand.length}) is above the maximum allowed: ${maxElements}`,
       );
     }
 

@@ -11,6 +11,6 @@ export function createPermittedOperatorsFilter<
       return success(operator);
     }
 
-    return failure(`Operator "${operator}" not allowed`);
+    return failure(`The operator "${operator}" is not allowed`);
   });
 }

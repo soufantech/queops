@@ -14,7 +14,11 @@ export function createForbiddenElementsFilter<TOperand extends unknown[]>(
     const violations = operand.filter((o) => forbiddenOperands.includes(o));
 
     if (violations.length > 0) {
-      return failure(`Operands not allowed: ${formatViolations(violations)}`);
+      return failure(
+        `The following elements are not allowed to be in the list: ${formatViolations(
+          violations,
+        )}`,
+      );
     }
 
     return success(operand);

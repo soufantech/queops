@@ -9,7 +9,7 @@ export function createMinElementsFilter<TOperand extends unknown[]>(
   return createOperandFilter<TOperand>((operand: TOperand) => {
     if (operand.length < minElements) {
       return failure(
-        `Number of elements violates minimum limit of ${minElements}`,
+        `The number of elements in list (${operand.length}) is below the minimum allowed: ${minElements}`,
       );
     }
 
