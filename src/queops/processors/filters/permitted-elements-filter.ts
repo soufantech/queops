@@ -14,7 +14,11 @@ export function createPermittedElementsFilter<TOperand extends unknown[]>(
     const violations = operand.filter((o) => !permittedOperands.includes(o));
 
     if (violations.length > 0) {
-      return failure(`Operands not allowed: ${formatViolations(violations)}`);
+      return failure(
+        `The following operands are not allowed: ${formatViolations(
+          violations,
+        )}`,
+      );
     }
 
     return success(operand);

@@ -11,13 +11,14 @@ export function createOperandFilter<TOperand>(
   q: TQ,
 ) => Result<string, TQ> {
   return <TQ extends QueryValue<TOperand, OperatorSuperType>>(q: TQ) => {
+    // TODO: refactor to use Result monadic flow.
     const filterResult = filter(q.operand);
 
     if (filterResult.isFailure()) {
-      return failure(filterResult.unwrap());
+      return failure(filterResult.get());
     }
 
-    q.operand = filterResult.unwrap();
+    q.operand = filterResult.get();
 
     return success(q);
   };

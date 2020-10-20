@@ -8,7 +8,9 @@ export function createMinNumberFilter(
 ): Filter<number, OperatorSuperType> {
   return createOperandFilter<number>((operand: number) => {
     if (operand < minNumber) {
-      return failure(`Operand "${operand}" exceeded minimum limit`);
+      return failure(
+        `The number operand "${operand}" must be greater or equal ${minNumber}`,
+      );
     }
 
     return success(operand);

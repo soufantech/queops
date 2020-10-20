@@ -8,7 +8,7 @@ export function createForbiddenOperatorsFilter<
 >(forbiddenOperators: TOperator[]): Filter<unknown, TOperator> {
   return createOperatorFilter<TOperator>((operator: TOperator) => {
     if (forbiddenOperators.includes(operator as TOperator)) {
-      return failure(`Operator "${operator}" is not allowed`);
+      return failure(`Operator "${operator}" is not allowed for this query`);
     }
 
     return success(operator);
