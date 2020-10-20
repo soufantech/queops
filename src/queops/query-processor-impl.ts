@@ -1,5 +1,5 @@
 import { QueryValue, OperatorSuperType, Query } from './queries';
-import { QueryAction, Notice } from './query-processor';
+import { QueryAction, Notice, QueryProcessingResult } from './query-processor';
 import { Filter, ValueParser, noopAction } from './processors';
 import { Result, failure, success } from './result';
 
@@ -37,11 +37,6 @@ class ResultBuilder {
     };
   }
 }
-
-export type QueryProcessingResult = {
-  action: QueryAction;
-  notices: Notice[];
-};
 
 export interface QueryActionFactory<
   TOperand,
