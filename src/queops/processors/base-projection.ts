@@ -8,7 +8,6 @@ import {
   createMaxElementsFilter,
   createMinElementsFilter,
 } from './filters';
-import { IncludeQueryValue } from '../queries';
 import {
   QueryActionFactory,
   QueryProcessorImpl,
@@ -21,7 +20,7 @@ export type QueryProjectionProcessorBaseOptions = {
   maxElements?: number;
   minElements?: number;
   filter?: OperandFilterMapper<string[]>;
-  defaultValue?: IncludeQueryValue;
+  defaultValue?: string[];
   bindingName?: string;
 };
 
@@ -85,6 +84,9 @@ export class QueryProjectionProcessorBase extends QueryProcessorImpl<
       name: params.name,
       createAction: params.createAction,
       bindingName: options.bindingName,
+      defaultValue: options.defaultValue
+        ? { operand: options.defaultValue, operator: null }
+        : undefined,
     });
   }
 }
