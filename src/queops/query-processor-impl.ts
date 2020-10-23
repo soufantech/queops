@@ -128,25 +128,6 @@ export class QueryProcessorImpl<TOperand, TOperator extends OperatorSuperType> {
     });
   }
 
-  // private parse(
-  //   rawValues: string[],
-  // ): Result<SubNotice, QueryValue<TOperand, TOperator>> {
-  //   return rawValues.reduce<Result<SubNotice, QueryValue<TOperand, TOperator>>>(
-  //     (result, rawValue) => {
-  //       if (result.isSuccess()) {
-  //         return result;
-  //       }
-
-  //       return this.parseValue(rawValue);
-  //     },
-  //     failure<SubNotice, QueryValue<TOperand, TOperator>>({
-  //       code: 'QUERY_UNDETECTED',
-  //       message:
-  //         'Could not detect a compatible well-formed query amongst the given values',
-  //     }),
-  //   );
-  // }
-
   private parse(
     rawValues: string[],
   ): Result<SubNotice, QueryValue<TOperand, TOperator>> {
@@ -161,31 +142,6 @@ export class QueryProcessorImpl<TOperand, TOperator extends OperatorSuperType> {
       }),
     );
   }
-
-  // private runFilters(
-  //   structuredQuery: QueryValue<TOperand, TOperator>,
-  // ): Result<SubNotice, QueryValue<TOperand, TOperator>> {
-  //   return this.filters.reduce<
-  //     Result<SubNotice, QueryValue<TOperand, TOperator>>
-  //   >((result, filter) => {
-  //     if (result.isFailure()) {
-  //       return result;
-  //     }
-
-  //     const filterResult = filter(structuredQuery);
-
-  //     if (filterResult.isFailure()) {
-  //       return failure<SubNotice, QueryValue<TOperand, TOperator>>({
-  //         code: 'INVALID_VALUE',
-  //         message: filterResult.get(),
-  //       });
-  //     } else {
-  //       return success<SubNotice, QueryValue<TOperand, TOperator>>(
-  //         filterResult.get(),
-  //       );
-  //     }
-  //   }, success(structuredQuery));
-  // }
 
   private runFilters(
     structuredQuery: QueryValue<TOperand, TOperator>,

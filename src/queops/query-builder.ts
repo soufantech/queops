@@ -24,6 +24,7 @@ export interface QueryBuilder {
   whereEqual<TOperand>(field: string, operand: TOperand): void;
   queryInclude(field: string, includes: string[]): void;
   queryExclude(field: string, excludes: string[]): void;
+  queryPopulate(field: string, populate: string[]): void;
   queryLimit(field: string, limit: number): void;
   queryOffset(field: string, offset: number): void;
   queryOrder(field: string, order: OrderOperator, priority: number): void;

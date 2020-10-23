@@ -22,6 +22,7 @@ export * from './query-limit';
 export * from './query-offset';
 export * from './query-order';
 export * from './query-search';
+export * from './query-populate';
 export * from './range-date';
 export * from './range-float';
 export * from './range-int';
