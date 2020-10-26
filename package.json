@@ -1,6 +1,6 @@
 {
   "name": "@soufantech/queops",
-  "version": "0.0.o",
+  "version": "1.0.0-beta.1",
   "description": "Build flexible and generic search filters from query string parameters",
   "keywords": [
     "querystring",
