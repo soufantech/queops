@@ -4,8 +4,7 @@ import {
   LogicalOperator,
   OrderOperator,
   RangeOperator,
-  QueryAction,
-} from '../queops';
+} from '../../queops';
 import {
   FindOptions,
   Op,
@@ -15,8 +14,8 @@ import {
   Includeable,
   OrOperator,
 } from 'sequelize';
-import { isArray } from './_helpers';
-import { FindOptionsBuilder } from './sequelize-query-builder';
+import { isArray } from '../_helpers';
+import { DelegateBuilder } from './_delegate-builder';
 
 const symbolOperatorMap: Record<
   LogicalOperator | ElementOperator | RangeOperator,
@@ -41,65 +40,12 @@ const orderOperatorMap: Record<OrderOperator, OrderDirection> = {
   desc: 'DESC',
 };
 
-export type SearchesHash = Record<string, string[]>;
-
-export type Populator = () => Includeable;
-
-export type PopulatorsHash = Record<string, Populator>;
-
-type BuilderDelegateParams = {
-  populators?: PopulatorsHash;
-  searches?: SearchesHash;
-};
-
-export type FindOptionsBuilderOptions = BuilderDelegateParams;
-
-class BuilderDelegate {
-  private readonly populators: PopulatorsHash;
-  private readonly searches: SearchesHash;
-
-  constructor(params: BuilderDelegateParams = {}) {
-    this.populators = params.populators ?? {};
-    this.searches = params.searches ?? {};
-  }
-
-  populate(field: string): Includeable | undefined {
-    const populator = this.populators[field];
-
-    if (populator === undefined) {
-      return undefined;
-    }
-
-    return populator();
-  }
-
-  expandSearch(field: string): string[] | undefined {
-    return this.searches[field];
-  }
-}
-
-export function createFindOptionsBuilder(
-  params?: BuilderDelegateParams,
-): FindOptionsBuilder {
-  const delegate = new BuilderDelegate(params);
-
-  return function buildFindOptions<TAttributes = unknown>(
-    action: QueryAction,
-  ): FindOptions<TAttributes> {
-    const builder = new StdFindOptionsBuilder<TAttributes>(delegate);
-
-    action(builder);
-
-    return builder.getFindOptions();
-  };
-}
-
 function andWhere<TAttributes = unknown>(
   where: WhereAttributeHash<TAttributes>,
   field: string,
   value: WhereValue<TAttributes>,
 ): WhereAttributeHash<TAttributes> {
-  const whereHash = where ?? {};
+  const whereHash = where ?? ({} as WhereAttributeHash<TAttributes>);
 
   if (whereHash[field as keyof WhereAttributeHash<TAttributes>] === undefined) {
     whereHash[field as keyof WhereAttributeHash<TAttributes>] = {};
@@ -115,10 +61,10 @@ function andWhere<TAttributes = unknown>(
   return whereHash;
 }
 
-class StdFindOptionsBuilder<TAttributes = unknown> implements QueryBuilder {
+export class StandardBuilder<TAttributes = unknown> implements QueryBuilder {
   private findOptions: FindOptions<TAttributes> = {};
 
-  constructor(private readonly delegate: BuilderDelegate) {}
+  constructor(private readonly delegate: DelegateBuilder) {}
 
   getFindOptions(): FindOptions {
     return this.findOptions;

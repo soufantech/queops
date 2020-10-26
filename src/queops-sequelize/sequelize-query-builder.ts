@@ -1,9 +1,6 @@
 import { QueryAction } from '../queops';
 import { FindOptions } from 'sequelize';
-import {
-  createFindOptionsBuilder,
-  FindOptionsBuilderOptions,
-} from './std-find-options-builder';
+import { createFindOptionsBuilder, FindOptionsBuilderOptions } from './builder';
 import { mergeFindOptions } from './find-options-merger';
 
 export interface FindOptionsBuilder {
@@ -14,9 +11,9 @@ export type SequelizeQueryBuilderParams = {
   findOptionsBuilder: FindOptionsBuilder;
 };
 
-export type CreateSequelizeQueryBuilderOptions = FindOptionsBuilderOptions;
+export type CreateBuilderOptions = FindOptionsBuilderOptions;
 
-export function createSequelizeQueryBuilder<TAttributes = unknown>(
+export function createBuilder<TAttributes = unknown>(
   options?: FindOptionsBuilderOptions,
 ): SequelizeQueryBuilder {
   return new SequelizeQueryBuilder<TAttributes>({
