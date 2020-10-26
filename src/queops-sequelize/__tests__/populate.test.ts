@@ -1,7 +1,7 @@
 import { Review, Bar, populate, sync } from './database';
 import { QuerystringProcessor, Q } from '../../queops';
 import { createBuilder } from '../sequelize-query-builder';
-import { Includeable } from 'sequelize/types';
+import { Includeable } from 'sequelize';
 
 beforeAll(async () => {
   await sync();
