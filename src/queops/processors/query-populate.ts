@@ -8,12 +8,10 @@ import {
   createMaxElementsFilter,
   createMinElementsFilter,
 } from './filters';
-import {
-  QueryActionFactory,
-  QueryProcessorImpl,
-} from '../query-processor-impl';
+import { QueryProcessorImpl } from '../query-processor-impl';
+import { createPopulateAction } from './actions';
 
-export type QueryProjectionProcessorBaseOptions = {
+export type QueryPopulateProcessorOptions = {
   separator?: string;
   acceptedElements?: string[];
   ignoredElements?: string[];
@@ -24,12 +22,9 @@ export type QueryProjectionProcessorBaseOptions = {
   bindingName?: string;
 };
 
-export type QueryProjectionProcessorBaseParams = {
-  name: string;
-  createAction: QueryActionFactory<string[], null>;
-};
+export type PopulateFilter = Filter<string[], null>;
 
-export type ProjectionFilter = Filter<string[], null>;
+const NAME = 'QUERY_POPULATE';
 
 function buildFilters({
   acceptedElements,
@@ -37,8 +32,8 @@ function buildFilters({
   maxElements,
   minElements,
   filter,
-}: QueryProjectionProcessorBaseOptions): ProjectionFilter[] {
-  const filters: ProjectionFilter[] = [];
+}: QueryPopulateProcessorOptions): PopulateFilter[] {
+  const filters: PopulateFilter[] = [];
 
   if (Array.isArray(acceptedElements)) {
     filters.push(createAcceptedElementsFilter(acceptedElements));
@@ -63,14 +58,8 @@ function buildFilters({
   return filters;
 }
 
-export class QueryProjectionProcessorBase extends QueryProcessorImpl<
-  string[],
-  null
-> {
-  constructor(
-    params: QueryProjectionProcessorBaseParams,
-    options: QueryProjectionProcessorBaseOptions = {},
-  ) {
+export class QueryPopulateProcessor extends QueryProcessorImpl<string[], null> {
+  constructor(options: QueryPopulateProcessorOptions = {}) {
     super({
       parser: unescapedListParser(stringParser(), {
         // truncate elements at max + 1 on parser level if maxElements is defined
@@ -81,8 +70,8 @@ export class QueryProjectionProcessorBase extends QueryProcessorImpl<
         separator: options.separator,
       }),
       filters: buildFilters(options),
-      name: params.name,
-      createAction: params.createAction,
+      name: NAME,
+      createAction: createPopulateAction,
       bindingName: options.bindingName,
       defaultValue: options.defaultValue
         ? { operand: options.defaultValue, operator: null }

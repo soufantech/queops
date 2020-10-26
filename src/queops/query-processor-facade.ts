@@ -43,6 +43,8 @@ import {
   QueryExcludeProcessor,
   QuerySearchProcessorOptions,
   QuerySearchProcessor,
+  QueryPopulateProcessor,
+  QueryPopulateProcessorOptions,
 } from './processors';
 
 export function equalString(
@@ -190,6 +192,13 @@ export function queryExclude(
   options?: QueryExcludeProcessorOptions,
 ): QueryExcludeProcessor {
   return new QueryExcludeProcessor(options);
+}
+
+export function queryPopulate(
+  this: void,
+  options?: QueryPopulateProcessorOptions,
+): QueryPopulateProcessor {
+  return new QueryPopulateProcessor(options);
 }
 
 export function querySearch(

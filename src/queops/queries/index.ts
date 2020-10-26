@@ -9,3 +9,4 @@ export * from './search-query';
 export * from './equal-query';
 export * from './include-query';
 export * from './exclude-query';
+export * from './populate-query';

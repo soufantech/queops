@@ -9,3 +9,4 @@ export * from './search-action';
 export * from './noop-action';
 export * from './exclude-action';
 export * from './include-action';
+export * from './populate-action';
