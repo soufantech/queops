@@ -1,6 +1,10 @@
 import { Sequelize, DataTypes, Model } from 'sequelize';
 
-const sequelize = new Sequelize('sqlite::memory:');
+const enableLogging = process.env.ENABLE_SEQUELIZE_LOGS === 'true';
+
+const sequelize = new Sequelize('sqlite::memory:', {
+  logging: enableLogging,
+});
 
 export const database = sequelize;
 
