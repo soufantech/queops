@@ -1,66 +1,40 @@
-import { Review, Bar, populate, sync } from './database';
-import * as show from './show';
+import { populate, sync, Bar } from './database';
 import { QuerystringProcessor, Q } from '../../queops';
 import { createBuilder } from '../sequelize-query-builder';
-import { decode } from 'querystring';
 
 beforeAll(async () => {
   await sync();
   await populate();
 });
 
-const QUERY_STRING = `\
-noop=true&\
-stars=gt:5&\
-`;
+test('query attributes are disjunctive (AND logic).', async () => {
+  const QUERY_STR = 'area=s&city=Juiz de Fora&stars=eq:2&';
 
-// setup
-const processor = new QuerystringProcessor({
-  region: Q.elementString({
-    maxElements: 3,
-    separator: ';',
-  }),
-  stars: [
-    Q.rangeInt({
-      forbiddenOperators: ['nbet'],
-    }),
-    Q.logicalInt(),
-    Q.queryOrder(),
-  ],
-  exclude: Q.queryExclude({
-    acceptedElements: Object.keys(Bar.rawAttributes),
-    minElements: 1,
-    maxElements: Object.keys(Bar.rawAttributes).length,
-  }),
-  area: Q.querySearch(),
-  populate: Q.queryPopulate(),
-});
-
-// setup
-const queryBuilder = createBuilder({
-  searches: {
-    area: ['region', 'city'],
-  },
-  populators: {
-    reviews: () => {
-      return {
-        model: Review,
-        as: 'reviews',
-      };
+  const builder = createBuilder({
+    searches: {
+      area: ['city', 'region'],
     },
-  },
-});
+  });
 
-test('everything is working as expected.', async () => {
-  const queryDict = decode(QUERY_STRING);
+  const processor = new QuerystringProcessor({
+    city: Q.equalString(),
+    stars: Q.logicalInt(),
+    area: Q.querySearch(),
+  });
 
-  const { action, notices } = processor.process(queryDict);
+  const { notices, action } = processor.process(QUERY_STR);
 
-  show.obj(notices);
+  const findOptions = builder.build(action);
 
-  const query = queryBuilder.build(action, {});
+  const results = await Bar.findAll(findOptions);
 
-  const result = await Bar.findAll(query);
+  expect(results).toContainEqual(
+    expect.objectContaining({
+      stars: 2,
+      city: 'Juiz de Fora',
+      region: expect.stringContaining('s'),
+    }),
+  );
 
-  show.json(result);
+  expect(notices.length).toBe(0);
 });

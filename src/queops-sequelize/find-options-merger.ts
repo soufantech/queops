@@ -4,6 +4,7 @@ import {
   FindAttributeOptions,
   ProjectionAlias,
   Order,
+  Includeable,
 } from 'sequelize';
 import { isObject, isArray } from './_helpers';
 
@@ -34,6 +35,7 @@ export function mergeFindOptions<TAttributes = unknown>(
     where: mergeWhere(base.where, top.where),
     attributes: mergeAttributes(base.attributes, top.attributes),
     order: mergeOrder(base.order, top.order),
+    include: mergeInclude(base.include, top.include),
   };
 }
 
@@ -54,6 +56,23 @@ function mergeAttributes(
   }
 
   return topAttributes;
+}
+
+function mergeInclude(
+  baseInclude?: Includeable | Includeable[],
+  topInclude?: Includeable | Includeable[],
+): Includeable | Includeable[] | undefined {
+  if (topInclude === undefined) {
+    return baseInclude;
+  }
+
+  if (baseInclude === undefined) {
+    return topInclude;
+  }
+
+  const baseIncludesArray = ([] as Includeable[]).concat(baseInclude);
+
+  return baseIncludesArray.concat(topInclude);
 }
 
 function mergeOrder(baseOrder?: Order, topOrder?: Order): Order | undefined {
