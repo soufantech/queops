@@ -11,7 +11,7 @@ export type QueryMapping = {
   [key: string]: QueryProcessor | QueryProcessor[];
 };
 
-export class QuerystringProcessor {
+export class QuerySchema {
   private readonly processors: [string, QueryProcessor[]][];
 
   constructor(mapping: QueryMapping) {

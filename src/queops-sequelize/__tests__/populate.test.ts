@@ -1,5 +1,5 @@
 import { Review, Bar, populate, sync } from './database';
-import { QuerystringProcessor, Q } from '../../queops';
+import { QuerySchema, Q } from '../../queops';
 import { createBuilder } from '../sequelize-query-builder';
 import { Includeable } from 'sequelize';
 
@@ -8,7 +8,7 @@ beforeAll(async () => {
   await populate();
 });
 
-const processor = new QuerystringProcessor({
+const schema = new QuerySchema({
   populate: Q.queryPopulate(),
 });
 
@@ -26,7 +26,7 @@ test('populate will bring the associated data when populator name matches the na
     },
   });
 
-  const { action, notices } = processor.process(QUERY_STR);
+  const { action, notices } = schema.process(QUERY_STR);
 
   const findOptions = queryBuilder.build(action);
 
@@ -57,7 +57,7 @@ test('repeated populate names have no effect.', async () => {
     },
   });
 
-  const { action, notices } = processor.process(QUERY_STR);
+  const { action, notices } = schema.process(QUERY_STR);
 
   const findOptions = queryBuilder.build(action); // findOptions has 3 includes though.
 
@@ -88,7 +88,7 @@ test('populate will NOT bring the associated data when populator name does NOT m
     },
   });
 
-  const { action, notices } = processor.process(QUERY_STR);
+  const { action, notices } = schema.process(QUERY_STR);
 
   const findOptions = queryBuilder.build(action);
 
@@ -117,7 +117,7 @@ test('populate will NOT bring the associated data when populate name is NOT pres
     },
   });
 
-  const { action, notices } = processor.process(QUERY_STR);
+  const { action, notices } = schema.process(QUERY_STR);
 
   const findOptions = queryBuilder.build(action);
 
@@ -146,7 +146,7 @@ test('populate will NOT bring the associated data when populator name does NOT m
     },
   });
 
-  const { action, notices } = processor.process(QUERY_STR);
+  const { action, notices } = schema.process(QUERY_STR);
 
   const findOptions = queryBuilder.build(action);
 
@@ -176,7 +176,7 @@ test('populate adds an entry to FindOptions.include if it already exists', async
     },
   });
 
-  const { action, notices } = processor.process(QUERY_STR);
+  const { action, notices } = schema.process(QUERY_STR);
 
   const findOptions = queryBuilder.build(action, {
     include: Review,

@@ -1,5 +1,5 @@
 import { populate, sync, Bar } from './database';
-import { QuerystringProcessor, Q } from '../../queops';
+import { QuerySchema, Q } from '../../queops';
 import { createBuilder } from '../sequelize-query-builder';
 
 beforeAll(async () => {
@@ -16,13 +16,13 @@ test('query attributes are disjunctive (AND logic).', async () => {
     },
   });
 
-  const processor = new QuerystringProcessor({
+  const schema = new QuerySchema({
     city: Q.equalString(),
     stars: Q.logicalInt(),
     area: Q.querySearch(),
   });
 
-  const { notices, action } = processor.process(QUERY_STR);
+  const { notices, action } = schema.process(QUERY_STR);
 
   const findOptions = builder.build(action);
 
